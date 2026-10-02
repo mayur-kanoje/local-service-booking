@@ -1,0 +1,1503 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Local Service Booking</title>
+
+    <style>
+
+        /* =====================================================
+           RESET
+        ===================================================== */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            color: #172033;
+            background: #ffffff;
+        }
+
+
+        /* =====================================================
+           NAVBAR
+        ===================================================== */
+
+        .navbar {
+            position: absolute;
+            top: 0;
+            left: 0;
+
+            width: 100%;
+            height: 86px;
+
+            padding: 0 6%;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            background: rgba(10, 22, 35, 0.72);
+            backdrop-filter: blur(8px);
+
+            z-index: 100;
+        }
+
+
+        /* LOGO */
+
+        .logo {
+            color: #ffffff;
+            text-decoration: none;
+
+            font-size: 29px;
+            font-weight: 800;
+
+            white-space: nowrap;
+        }
+
+        .logo span {
+            color: #2491ff;
+        }
+
+
+        /* NAV LINKS */
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 34px;
+
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #ffffff;
+            text-decoration: none;
+
+            font-size: 15px;
+            font-weight: 700;
+
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #42a5ff;
+        }
+
+
+        /* NAV RIGHT */
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+
+        /* LOCATION */
+
+        .nav-location {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+
+            color: #ffffff;
+
+            font-size: 14px;
+            font-weight: 700;
+
+            white-space: nowrap;
+        }
+
+        .nav-location svg {
+            width: 20px;
+            height: 20px;
+
+            fill: none;
+            stroke: #42a5ff;
+            stroke-width: 2;
+
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+
+        /* SIGN UP */
+
+        .signup-btn {
+            border: none;
+
+            padding: 13px 23px;
+
+            border-radius: 9px;
+
+            background: #147df5;
+            color: #ffffff;
+
+            font-size: 14px;
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition: 0.3s;
+        }
+
+        .signup-btn:hover {
+            background: #0867d2;
+            transform: translateY(-1px);
+        }
+
+
+        /* =====================================================
+           DASHBOARD
+        ===================================================== */
+
+        .dashboard-btn {
+            display: none;
+
+            border: none;
+
+            padding: 13px 23px;
+
+            border-radius: 9px;
+
+            background: #147df5;
+            color: #ffffff;
+
+            font-size: 14px;
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition: 0.3s;
+        }
+
+        .dashboard-btn:hover {
+            background: #0867d2;
+            transform: translateY(-1px);
+        }
+
+
+        /* LOGOUT */
+
+        .logout-btn {
+            display: none;
+
+            border: none;
+
+            padding: 13px 23px;
+
+            border-radius: 9px;
+
+            background: #ffffff;
+            color: #147df5;
+
+            font-size: 14px;
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition: 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #eaf4ff;
+        }
+
+
+        /* =====================================================
+           HERO
+        ===================================================== */
+
+        .hero {
+            min-height: 760px;
+
+            position: relative;
+
+            display: flex;
+            align-items: center;
+
+            padding: 120px 6% 80px;
+
+            overflow: hidden;
+
+            background-image:
+                linear-gradient(
+                    90deg,
+                    rgba(3, 20, 30, 0.78),
+                    rgba(3, 20, 30, 0.50),
+                    rgba(3, 20, 30, 0.15)
+                ),
+                url("image/background.png");
+
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+
+        /* HERO CONTENT */
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+
+            width: 100%;
+            max-width: 900px;
+
+            color: #ffffff;
+        }
+
+
+        /* TAGLINE */
+
+        .hero-tagline {
+            margin-bottom: 18px;
+
+            font-size: 16px;
+            font-weight: 700;
+
+            letter-spacing: 0.4px;
+        }
+
+        .hero-tagline span {
+            color: #42a5ff;
+            margin: 0 8px;
+        }
+
+
+        /* HEADING */
+
+        .hero h1 {
+            margin-bottom: 22px;
+
+            font-size: 64px;
+            line-height: 1.08;
+
+            font-weight: 800;
+
+            color: #ffffff;
+        }
+
+        .hero h1 span {
+            color: #42a5ff;
+        }
+
+
+        /* DESCRIPTION */
+
+        .hero-description {
+            max-width: 670px;
+
+            margin-bottom: 36px;
+
+            font-size: 19px;
+            line-height: 1.7;
+
+            color: #f1f7ff;
+        }
+
+
+        /* =====================================================
+           SEARCH BOX
+        ===================================================== */
+
+        .search-box {
+            width: 100%;
+            max-width: 900px;
+
+            display: flex;
+            align-items: center;
+
+            background: #ffffff;
+
+            padding: 10px;
+
+            border-radius: 15px;
+
+            box-shadow:
+                0 20px 45px rgba(0, 0, 0, 0.28);
+        }
+
+
+        /* SEARCH FIELD */
+
+        .search-field {
+            flex: 1;
+
+            min-width: 0;
+
+            display: flex;
+            align-items: center;
+
+            gap: 13px;
+
+            padding: 10px 17px;
+
+            border-right: 1px solid #e2e8f0;
+        }
+
+
+        /* ICON */
+
+        .search-icon {
+            width: 30px;
+            min-width: 30px;
+            height: 30px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .search-icon svg {
+            width: 23px;
+            height: 23px;
+
+            fill: none;
+
+            stroke-width: 2;
+
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .location-icon svg {
+            stroke: #147df5;
+        }
+
+        .service-icon svg {
+            stroke: #64748b;
+        }
+
+
+        /* FIELD CONTENT */
+
+        .search-field-content {
+            width: 100%;
+        }
+
+
+        /* LABEL */
+
+        .search-field label {
+            display: block;
+
+            margin-bottom: 5px;
+
+            color: #475569 !important;
+
+            font-size: 12px;
+            font-weight: 700;
+
+            line-height: 1.2;
+
+            opacity: 1 !important;
+        }
+
+
+        /* INPUT + SELECT */
+
+        .search-field input,
+        .search-field select {
+            width: 100%;
+
+            padding: 0;
+
+            border: none;
+            outline: none;
+
+            background: transparent;
+
+            color: #172033 !important;
+
+            font-size: 15px;
+            font-weight: 500;
+
+            opacity: 1 !important;
+        }
+
+        .search-field input::placeholder {
+            color: #64748b;
+
+            opacity: 1;
+        }
+
+        .search-field select {
+            cursor: pointer;
+        }
+
+        .search-field select option {
+            color: #172033;
+            background: #ffffff;
+        }
+
+
+        /* SEARCH BUTTON */
+
+        .search-btn {
+            border: none;
+
+            min-width: 135px;
+
+            padding: 18px 28px;
+
+            border-radius: 10px;
+
+            background: #147df5;
+            color: #ffffff;
+
+            font-size: 16px;
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition: 0.3s;
+        }
+
+        .search-btn:hover {
+            background: #0867d2;
+
+            transform: translateY(-2px);
+        }
+
+
+        /* =====================================================
+           TRUST POINTS
+        ===================================================== */
+
+        .trust-points {
+            display: flex;
+            align-items: center;
+
+            gap: 28px;
+
+            margin-top: 30px;
+        }
+
+        .trust-item {
+            display: flex;
+            align-items: center;
+
+            gap: 8px;
+
+            color: #ffffff;
+
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .trust-item-icon {
+            width: 21px;
+            height: 21px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background: #147df5;
+
+            color: #ffffff;
+
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+
+        /* =====================================================
+           WELCOME SECTION
+        ===================================================== */
+
+        .welcome-section {
+            padding: 75px 6%;
+
+            text-align: center;
+
+            background: #ffffff;
+        }
+
+        .welcome-section h2 {
+            margin-bottom: 15px;
+
+            font-size: 36px;
+            font-weight: 800;
+
+            color: #172033;
+        }
+
+        .welcome-section h2 span {
+            color: #147df5;
+        }
+
+        .welcome-section p {
+            max-width: 720px;
+
+            margin: auto;
+
+            color: #64748b;
+
+            font-size: 16px;
+            line-height: 1.7;
+        }
+
+
+        /* =====================================================
+           MOBILE
+        ===================================================== */
+
+        @media (max-width: 1100px) {
+
+            .nav-links {
+                gap: 20px;
+            }
+
+            .nav-location {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 55px;
+            }
+        }
+
+
+        @media (max-width: 850px) {
+
+            .navbar {
+                height: 75px;
+
+                padding: 0 5%;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero {
+                min-height: 850px;
+
+                padding: 120px 5% 70px;
+
+                align-items: flex-start;
+            }
+
+            .hero h1 {
+                font-size: 47px;
+            }
+
+            .hero-description {
+                font-size: 17px;
+            }
+
+            .search-box {
+                flex-direction: column;
+
+                align-items: stretch;
+
+                gap: 5px;
+            }
+
+            .search-field {
+                border-right: none;
+
+                border-bottom: 1px solid #e2e8f0;
+
+                padding: 14px 12px;
+            }
+
+            .search-btn {
+                width: 100%;
+            }
+
+            .trust-points {
+                flex-wrap: wrap;
+
+                gap: 15px;
+            }
+        }
+
+
+        @media (max-width: 520px) {
+
+            .logo {
+                font-size: 22px;
+            }
+
+            .signup-btn,
+            .dashboard-btn,
+            .logout-btn {
+                padding: 10px 14px;
+
+                font-size: 12px;
+            }
+
+            .hero {
+                min-height: 900px;
+            }
+
+            .hero h1 {
+                font-size: 38px;
+            }
+
+            .hero-tagline {
+                font-size: 14px;
+            }
+
+            .hero-description {
+                font-size: 16px;
+            }
+
+            .welcome-section h2 {
+                font-size: 29px;
+            }
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+
+    <!-- =====================================================
+         NAVBAR
+    ====================================================== -->
+
+    <nav class="navbar">
+
+
+        <!-- LOGO -->
+
+        <a href="index.html" class="logo">
+            Local<span>Service</span>
+        </a>
+
+
+        <!-- NAVIGATION -->
+
+        <ul class="nav-links">
+
+            <li>
+                <a href="index.html">Home</a>
+            </li>
+
+            <li>
+                <a href="#services">Services</a>
+            </li>
+
+            <li>
+                <a href="#how-it-works">How It Works</a>
+            </li>
+
+            <li>
+                <a href="#about">About</a>
+            </li>
+
+            <li>
+                <a href="#contact">Contact</a>
+            </li>
+
+        </ul>
+
+
+        <!-- RIGHT SIDE -->
+
+        <div class="nav-right">
+
+
+            <!-- LOCATION -->
+
+            <div class="nav-location">
+
+                <svg viewBox="0 0 24 24">
+
+                    <path
+                        d="M12 21s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z">
+                    </path>
+
+                    <circle
+                        cx="12"
+                        cy="9"
+                        r="2.5">
+                    </circle>
+
+                </svg>
+
+                <span>Location</span>
+
+            </div>
+
+
+            <!-- DASHBOARD -->
+
+            <button
+                id="dashboardBtn"
+                class="dashboard-btn"
+                onclick="goToDashboard()">
+
+                Dashboard
+
+            </button>
+
+
+            <!-- SIGN UP -->
+
+            <button
+                id="signupBtn"
+                class="signup-btn"
+                onclick="goToSignup()">
+
+                Sign Up
+
+            </button>
+
+
+            <!-- LOGOUT -->
+
+            <button
+                id="logoutBtn"
+                class="logout-btn"
+                onclick="logoutUser()">
+
+                Logout
+
+            </button>
+
+
+        </div>
+
+    </nav>
+
+
+
+    <!-- =====================================================
+         HERO SECTION
+    ====================================================== -->
+
+    <section class="hero">
+
+
+        <div class="hero-content">
+
+
+            <!-- TAGLINE -->
+
+            <div class="hero-tagline">
+
+                Your Local
+                <span>•</span>
+                Trusted
+                <span>•</span>
+                Professional
+
+            </div>
+
+
+            <!-- HEADING -->
+
+            <h1>
+
+                Local Service
+                <br>
+
+                <span>Booking Platform</span>
+
+            </h1>
+
+
+            <!-- DESCRIPTION -->
+
+            <p class="hero-description">
+
+                Find trusted local service providers for your
+                home and business needs. Search, compare and
+                book professional services easily.
+
+            </p>
+
+
+
+            <!-- =================================================
+                 SEARCH BOX
+            ================================================== -->
+
+            <div class="search-box">
+
+
+                <!-- LOCATION FIELD -->
+
+                <div class="search-field">
+
+
+                    <div class="search-icon location-icon">
+
+                        <svg viewBox="0 0 24 24">
+
+                            <path
+                                d="M12 21s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z">
+                            </path>
+
+                            <circle
+                                cx="12"
+                                cy="9"
+                                r="2.5">
+                            </circle>
+
+                        </svg>
+
+                    </div>
+
+
+                    <div class="search-field-content">
+
+                        <label for="location">
+                            Location
+                        </label>
+
+                        <input
+                            type="text"
+                            id="location"
+                            placeholder="Enter your location"
+                            autocomplete="off">
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- SERVICE FIELD -->
+
+                <div class="search-field">
+
+
+                    <div class="search-icon service-icon">
+
+                        <svg viewBox="0 0 24 24">
+
+                            <path
+                                d="M14.7 6.3a4 4 0 0 0-5.1 5.1L4 17l3 3 5.6-5.6a4 4 0 0 0 5.1-5.1l-2.4 2.4-2.1-.6-.6-2.1 2.4-2.4z">
+                            </path>
+
+                        </svg>
+
+                    </div>
+
+
+                    <div class="search-field-content">
+
+                        <label for="service">
+                            Service
+                        </label>
+
+                        <select id="service">
+
+                            <option value="">
+                                Select a service
+                            </option>
+
+                            <option value="Carpenter">
+                                Carpenter
+                            </option>
+
+                            <option value="Plumber">
+                                Plumber
+                            </option>
+
+                            <option value="Cleaner">
+                                Cleaner
+                            </option>
+
+                            <option value="Home Designer">
+                                Home Designer
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- SEARCH BUTTON -->
+
+                <button
+                    class="search-btn"
+                    onclick="searchProviders()">
+
+                    Search
+
+                </button>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 TRUST POINTS
+            ================================================== -->
+
+            <div class="trust-points">
+
+
+                <div class="trust-item">
+
+                    <span class="trust-item-icon">
+                        ✓
+                    </span>
+
+                    Verified Providers
+
+                </div>
+
+
+                <div class="trust-item">
+
+                    <span class="trust-item-icon">
+                        ★
+                    </span>
+
+                    Trusted Services
+
+                </div>
+
+
+                <div class="trust-item">
+
+                    <span class="trust-item-icon">
+                        ✓
+                    </span>
+
+                    Easy Booking
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         WELCOME SECTION
+    ====================================================== -->
+
+    <section class="welcome-section">
+
+        <h2>
+
+            Book Local Services
+            <span>With Ease</span>
+
+        </h2>
+
+        <p>
+
+            Local Service Booking helps you find professional
+            service providers near you and makes booking simple,
+            quick and convenient.
+
+        </p>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+    ====================================================== -->
+
+    <script>
+
+        const API_BASE =
+            "http://127.0.0.1:5000/api";
+
+
+        /* =====================================================
+           GET LOGGED-IN USER
+        ===================================================== */
+
+        function getUser() {
+
+            try {
+
+                return JSON.parse(
+                    localStorage.getItem(
+                        "localServiceUser"
+                    ) || "null"
+                );
+
+            } catch (error) {
+
+                console.error(
+                    "User session error:",
+                    error
+                );
+
+                return null;
+            }
+        }
+
+
+        /* =====================================================
+           CHECK USER SESSION
+        ===================================================== */
+
+        function checkUserSession() {
+
+            const user = getUser();
+
+            const loginBtn =
+                document.getElementById(
+                    "loginBtn"
+                );
+
+            const signupBtn =
+                document.getElementById(
+                    "signupBtn"
+                );
+
+            const dashboardBtn =
+                document.getElementById(
+                    "dashboardBtn"
+                );
+
+            const logoutBtn =
+                document.getElementById(
+                    "logoutBtn"
+                );
+
+
+            /* =============================================
+               USER IS LOGGED IN
+            ============================================= */
+
+            if (user && user.id) {
+
+                if (loginBtn) {
+
+                    loginBtn.style.display =
+                        "none";
+
+                }
+
+
+                if (signupBtn) {
+
+                    signupBtn.style.display =
+                        "none";
+
+                }
+
+
+                if (dashboardBtn) {
+
+                    dashboardBtn.style.display =
+                        "block";
+
+                }
+
+
+                if (logoutBtn) {
+
+                    logoutBtn.style.display =
+                        "block";
+
+                }
+
+            }
+
+
+            /* =============================================
+               USER IS NOT LOGGED IN
+            ============================================= */
+
+            else {
+
+                if (loginBtn) {
+
+                    loginBtn.style.display =
+                        "block";
+
+                }
+
+
+                if (signupBtn) {
+
+                    signupBtn.style.display =
+                        "block";
+
+                }
+
+
+                if (dashboardBtn) {
+
+                    dashboardBtn.style.display =
+                        "none";
+
+                }
+
+
+                if (logoutBtn) {
+
+                    logoutBtn.style.display =
+                        "none";
+
+                }
+
+            }
+        }
+
+
+        /* =====================================================
+           GO TO SIGNUP
+        ===================================================== */
+
+        function goToSignup() {
+
+            window.location.href =
+                "signup.html";
+        }
+
+
+        /* =====================================================
+           GO TO LOGIN
+        ===================================================== */
+
+        function goToLogin() {
+
+            window.location.href =
+                "login.html";
+        }
+
+
+        /* =====================================================
+           GO TO USER DASHBOARD
+        ===================================================== */
+
+        function goToDashboard() {
+
+            const user = getUser();
+
+            if (!user || !user.id) {
+
+                alert(
+                    "Please login first."
+                );
+
+                window.location.href =
+                    "login.html";
+
+                return;
+            }
+
+
+            window.location.href =
+                "user-dashboard.html";
+        }
+
+
+        /* =====================================================
+           LOGOUT
+        ===================================================== */
+
+        function logoutUser() {
+
+            localStorage.removeItem(
+                "localServiceUser"
+            );
+
+            localStorage.removeItem(
+                "localServiceLoggedIn"
+            );
+
+            localStorage.removeItem(
+                "selectedProviderId"
+            );
+
+            localStorage.removeItem(
+                "selectedService"
+            );
+
+            localStorage.removeItem(
+                "searchLocation"
+            );
+
+            localStorage.removeItem(
+                "searchedProviders"
+            );
+
+
+            window.location.href =
+                "login.html";
+        }
+
+
+        /* =====================================================
+           SEARCH PROVIDERS
+        ===================================================== */
+
+        async function searchProviders() {
+
+            const locationInput =
+                document.getElementById(
+                    "location"
+                );
+
+            const serviceInput =
+                document.getElementById(
+                    "service"
+                );
+
+
+            if (
+                !locationInput ||
+                !serviceInput
+            ) {
+
+                return;
+            }
+
+
+            const location =
+                locationInput.value.trim();
+
+            const serviceName =
+                serviceInput.value;
+
+
+            /* =============================================
+               LOCATION VALIDATION
+            ============================================= */
+
+            if (!location) {
+
+                alert(
+                    "Please enter your location."
+                );
+
+                return;
+            }
+
+
+            /* =============================================
+               SERVICE VALIDATION
+            ============================================= */
+
+            if (!serviceName) {
+
+                alert(
+                    "Please select a service."
+                );
+
+                return;
+            }
+
+
+            /* =============================================
+               SERVICE MAP
+            ============================================= */
+
+            const serviceMap = {
+
+                "Carpenter": {
+
+                    id: 1,
+                    name: "Carpenter",
+                    price: 500
+
+                },
+
+                "Plumber": {
+
+                    id: 2,
+                    name: "Plumber",
+                    price: 400
+
+                },
+
+                "Cleaner": {
+
+                    id: 3,
+                    name: "Cleaner",
+                    price: 300
+
+                },
+
+                "Home Designer": {
+
+                    id: 4,
+                    name: "Home Designer",
+                    price: 1000
+
+                }
+
+            };
+
+
+            const service =
+                serviceMap[serviceName];
+
+
+            if (!service) {
+
+                alert(
+                    "Invalid service selected."
+                );
+
+                return;
+            }
+
+
+            /* =============================================
+               SEARCH BUTTON
+            ============================================= */
+
+            const button =
+                document.querySelector(
+                    'button[onclick*="searchProviders"], .search-btn'
+                );
+
+
+            if (button) {
+
+                button.disabled = true;
+
+                button.dataset.oldText =
+                    button.textContent;
+
+                button.textContent =
+                    "Searching...";
+            }
+
+
+            /* =============================================
+               API REQUEST
+            ============================================= */
+
+            try {
+
+                const url =
+                    `${API_BASE}/providers?service_type=${encodeURIComponent(service.name)}` +
+                    `&city=${encodeURIComponent(location)}`;
+
+
+                const response =
+                    await fetch(url);
+
+
+                const data =
+                    await response.json();
+
+
+                if (
+                    !response.ok ||
+                    !data.success
+                ) {
+
+                    throw new Error(
+                        data.message ||
+                        data.error ||
+                        "Unable to search providers."
+                    );
+                }
+
+
+                /* =========================================
+                   SAVE SEARCH DATA
+                ========================================= */
+
+                localStorage.setItem(
+                    "searchLocation",
+                    location
+                );
+
+
+                localStorage.setItem(
+                    "selectedService",
+                    JSON.stringify(service)
+                );
+
+
+                localStorage.setItem(
+                    "searchedProviders",
+                    JSON.stringify(
+                        data.providers || []
+                    )
+                );
+
+
+                /* =========================================
+                   OPEN PROVIDERS PAGE
+                ========================================= */
+
+                window.location.href =
+                    "providers.html";
+
+
+            } catch (error) {
+
+                console.error(
+                    "Provider search error:",
+                    error
+                );
+
+
+                alert(
+                    error.message ||
+                    "Unable to search providers. Please try again."
+                );
+
+
+            } finally {
+
+                if (button) {
+
+                    button.disabled =
+                        false;
+
+                    button.textContent =
+                        button.dataset.oldText ||
+                        "Search";
+                }
+            }
+        }
+
+
+        /* =====================================================
+           PAGE LOAD
+        ===================================================== */
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+                checkUserSession();
+
+            }
+        );
+
+    </script>
+
+
+</body>
+
+</html>

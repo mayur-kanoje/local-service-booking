@@ -1,0 +1,3183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Dashboard - LocalService</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f4f7fb;
+    color:#172033
+}
+
+button{
+    font-family:inherit;
+    cursor:pointer
+}
+
+.navbar{
+    min-height:76px;
+    background:#0b1f33;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 6%;
+    gap:20px
+}
+
+.logo{
+    color:#fff;
+    text-decoration:none;
+    font-size:27px;
+    font-weight:800
+}
+
+.logo span{
+    color:#42a5ff
+}
+
+.nav-links{
+    display:flex;
+    gap:30px;
+    list-style:none
+}
+
+.nav-links a{
+    color:#fff;
+    text-decoration:none;
+    font-size:15px;
+    font-weight:600
+}
+
+.nav-links a:hover{
+    color:#42a5ff
+}
+
+.logout-btn{
+    padding:11px 20px;
+    border:0;
+    border-radius:9px;
+    background:#fff;
+    color:#147df5;
+    font-weight:700
+}
+
+.container{
+    max-width:1180px;
+    margin:38px auto;
+    padding:0 22px
+}
+
+.dashboard-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+    margin-bottom:26px
+}
+
+.dashboard-header h1{
+    font-size:32px;
+    margin-bottom:8px
+}
+
+.dashboard-header p{
+    color:#64748b
+}
+
+.new-booking-btn{
+    padding:13px 20px;
+    background:#147df5;
+    color:#fff;
+    border:0;
+    border-radius:9px;
+    font-weight:700
+}
+
+.new-booking-btn:hover{
+    background:#0867d2
+}
+
+.user-card{
+    background:#fff;
+    padding:23px;
+    border-radius:17px;
+    box-shadow:0 8px 25px #0b1f330c;
+    display:flex;
+    align-items:center;
+    gap:17px;
+    margin-bottom:25px
+}
+
+.user-avatar{
+    width:64px;
+    height:64px;
+    border-radius:50%;
+    background:#eaf3ff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:30px
+}
+
+.user-info h2{
+    margin-bottom:6px;
+    font-size:21px
+}
+
+.user-info p{
+    color:#64748b;
+    font-size:14px
+}
+
+.stats-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:16px;
+    margin-bottom:28px
+}
+
+.stat-card{
+    background:#fff;
+    padding:21px;
+    border-radius:15px;
+    box-shadow:0 7px 20px #0b1f3308;
+    border:1px solid #edf1f6
+}
+
+.stat-number{
+    font-size:28px;
+    font-weight:800;
+    margin-bottom:6px
+}
+
+.stat-title{
+    color:#64748b;
+    font-size:13px
+}
+
+.pending-number{color:#d99000}
+.accepted-number{color:#16a34a}
+.completed-number{color:#147df5}
+
+.section-card{
+    background:#fff;
+    border-radius:17px;
+    padding:25px;
+    box-shadow:0 8px 25px #0b1f330c
+}
+
+.section-title{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
+    margin-bottom:22px
+}
+
+.section-title h2{
+    font-size:22px
+}
+
+.booking-count{
+    color:#64748b;
+    font-size:14px
+}
+
+/* =========================
+   BOOKING CARD
+========================= */
+
+.booking-card{
+    position:relative;
+    background:#fff;
+    border:1px solid #e2eaf3;
+    border-radius:16px;
+    padding:22px;
+    margin-bottom:18px;
+    transition:transform .2s,box-shadow .2s,border-color .2s;
+    overflow:hidden
+}
+
+.booking-card:hover{
+    transform:translateY(-2px);
+    box-shadow:0 12px 28px #0b1f3310;
+    border-color:#cbdced
+}
+
+.booking-card:last-child{
+    margin-bottom:0
+}
+
+.booking-top{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:15px;
+    margin-bottom:19px
+}
+
+.provider-info{
+    display:flex;
+    gap:14px;
+    align-items:center;
+    min-width:0
+}
+
+.provider-avatar{
+    width:58px;
+    height:58px;
+    flex:0 0 58px;
+    border-radius:14px;
+    background:linear-gradient(135deg,#eaf3ff,#dcecff);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:29px
+}
+
+.provider-info h3{
+    font-size:18px;
+    margin-bottom:6px;
+    overflow-wrap:anywhere
+}
+
+.provider-service{
+    color:#147df5;
+    font-size:13px;
+    font-weight:700
+}
+
+.booking-id{
+    margin-top:6px;
+    font-size:11px;
+    color:#94a3b8
+}
+
+.status{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:8px 12px;
+    border-radius:30px;
+    font-size:11px;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:.3px;
+    white-space:nowrap
+}
+
+.status-pending{
+    background:#fff6df;
+    color:#a96b00
+}
+
+.status-accepted{
+    background:#e9f8ef;
+    color:#15803d
+}
+
+.status-completed{
+    background:#eaf3ff;
+    color:#1261b3
+}
+
+.status-cancelled,
+.status-rejected{
+    background:#ffeded;
+    color:#c62828
+}
+
+.booking-details{
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:12px;
+    padding:17px 0;
+    border-top:1px solid #edf1f5;
+    border-bottom:1px solid #edf1f5
+}
+
+.booking-detail{
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+    gap:7px
+}
+
+.detail-label{
+    color:#64748b;
+    font-size:12px;
+    display:flex;
+    align-items:center;
+    gap:6px
+}
+
+.detail-value{
+    font-size:14px;
+    font-weight:700;
+    overflow-wrap:anywhere
+}
+
+.amount-value{
+    color:#0b7a43;
+    font-size:17px
+}
+
+.address-box{
+    margin-top:15px;
+    padding:14px 15px;
+    background:#f7faff;
+    border:1px solid #eaf0f8;
+    border-radius:11px;
+    color:#475569;
+    font-size:13px;
+    line-height:1.6;
+    display:flex;
+    gap:10px;
+    align-items:flex-start
+}
+
+.address-icon{
+    font-size:17px
+}
+
+/* Provider profile information */
+.provider-profile-box{
+    margin-top:15px;
+    padding:15px;
+    background:#f8fbff;
+    border:1px solid #e3edf8;
+    border-radius:11px
+}
+
+.provider-profile-title{
+    font-size:13px;
+    font-weight:800;
+    color:#172033;
+    margin-bottom:12px
+}
+
+.provider-profile-grid{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:12px
+}
+
+.provider-profile-item{
+    min-width:0
+}
+
+.provider-profile-label{
+    display:block;
+    color:#64748b;
+    font-size:11px;
+    margin-bottom:5px
+}
+
+.provider-profile-value{
+    color:#172033;
+    font-size:13px;
+    font-weight:700;
+    overflow-wrap:anywhere
+}
+
+.provider-price-value{
+    color:#0b7a43;
+    font-size:15px;
+    font-weight:800
+}
+
+.payment-status-box{
+    margin-top:15px;
+    padding:14px 16px;
+    border-radius:11px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    flex-wrap:wrap
+}
+
+.payment-pending{
+    background:#fff8e6;
+    border:1px solid #f5df9c
+}
+
+.payment-paid{
+    background:#eaf8ef;
+    border:1px solid #b7e4c7
+}
+
+.payment-status-text{
+    font-size:13px;
+    font-weight:700
+}
+
+.payment-pending .payment-status-text{
+    color:#a16207
+}
+
+.payment-paid .payment-status-text{
+    color:#15803d
+}
+
+.paid-badge{
+    background:#16a34a;
+    color:#fff;
+    padding:6px 11px;
+    border-radius:20px;
+    font-size:11px;
+    font-weight:800
+}
+
+.payment-id{
+    width:100%;
+    color:#64748b;
+    font-size:11px;
+    overflow-wrap:anywhere
+}
+
+.booking-actions{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-top:17px;
+    flex-wrap:wrap
+}
+
+.action-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:7px;
+    padding:10px 15px;
+    border-radius:8px;
+    border:0;
+    font-size:13px;
+    font-weight:700;
+    transition:background .2s
+}
+
+.cancel-btn{
+    background:#fff0f0;
+    color:#c62828
+}
+
+.cancel-btn:hover{
+    background:#ffe0e0
+}
+
+.review-btn{
+    background:#fff6df;
+    color:#9a6700
+}
+
+.review-btn:hover{
+    background:#ffedbd
+}
+
+.payment-btn{
+    background:#16a34a;
+    color:#fff
+}
+
+.payment-btn:hover{
+    background:#15803d
+}
+
+.payment-btn:disabled{
+    background:#94a3b8;
+    cursor:not-allowed
+}
+
+.empty-state{
+    text-align:center;
+    padding:55px 20px;
+    display:none
+}
+
+.empty-icon{
+    font-size:55px;
+    margin-bottom:15px
+}
+
+.empty-state h3{
+    font-size:21px;
+    margin-bottom:8px
+}
+
+.empty-state p{
+    color:#64748b;
+    margin-bottom:20px
+}
+
+/* =========================
+   MODALS
+========================= */
+
+.review-overlay,
+.payment-overlay{
+    position:fixed;
+    inset:0;
+    background:#0b1f338c;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    z-index:200
+}
+
+.review-box,
+.payment-modal{
+    width:100%;
+    max-width:450px;
+    background:#fff;
+    padding:28px;
+    border-radius:16px;
+    box-shadow:0 20px 50px #0003;
+    max-height:90vh;
+    overflow:auto
+}
+
+.payment-modal h2{
+    margin-bottom:8px
+}
+
+.payment-subtitle{
+    color:#64748b;
+    font-size:13px;
+    margin-bottom:20px
+}
+
+.payment-summary{
+    background:#f8fbff;
+    border:1px solid #e3eaf2;
+    padding:15px;
+    border-radius:10px;
+    margin-bottom:20px
+}
+
+.payment-row{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:10px;
+    font-size:13px
+}
+
+.payment-row:last-child{
+    margin-bottom:0;
+    padding-top:10px;
+    border-top:1px solid #e3eaf2;
+    font-size:16px
+}
+
+.payment-method-title{
+    font-size:14px;
+    font-weight:800;
+    margin-bottom:12px
+}
+
+.payment-methods{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
+    margin-bottom:20px
+}
+
+.payment-method{
+    padding:14px 8px;
+    border:1px solid #d8e1ec;
+    background:#fff;
+    border-radius:9px;
+    font-weight:700;
+    font-size:12px
+}
+
+.payment-method:hover{
+    border-color:#147df5
+}
+
+.payment-method.selected{
+    background:#eaf3ff;
+    border:2px solid #147df5;
+    color:#147df5
+}
+
+.demo-note{
+    background:#fff8e6;
+    color:#8a6200;
+    padding:11px;
+    border-radius:8px;
+    font-size:12px;
+    line-height:1.5;
+    margin-bottom:18px
+}
+
+.payment-actions,
+.review-actions{
+    display:flex;
+    gap:10px
+}
+
+.close-payment,
+.close-review{
+    padding:12px 18px;
+    border:0;
+    border-radius:8px;
+    background:#edf2f7;
+    color:#334155;
+    font-weight:700
+}
+
+.confirm-payment{
+    flex:1;
+    padding:12px;
+    border:0;
+    border-radius:8px;
+    background:#16a34a;
+    color:#fff;
+    font-weight:800
+}
+
+.confirm-payment:hover{
+    background:#15803d
+}
+
+.confirm-payment:disabled{
+    background:#94a3b8;
+    cursor:not-allowed
+}
+
+.review-box h2{
+    margin-bottom:20px
+}
+
+.rating-buttons{
+    display:flex;
+    gap:8px;
+    margin-bottom:20px
+}
+
+.rating-buttons button{
+    width:42px;
+    height:42px;
+    border:1px solid #d8e1ec;
+    background:#fff;
+    border-radius:8px;
+    font-size:20px;
+    color:#cbd5e1
+}
+
+.rating-buttons button.selected{
+    background:#fff7df;
+    border-color:#f59e0b;
+    color:#f59e0b
+}
+
+#reviewText{
+    width:100%;
+    height:110px;
+    padding:12px;
+    border:1px solid #d8e1ec;
+    border-radius:8px;
+    resize:vertical;
+    outline:none;
+    font-family:inherit
+}
+
+#reviewText:focus{
+    border-color:#147df5
+}
+
+.submit-review{
+    flex:1;
+    padding:12px;
+    border:0;
+    border-radius:8px;
+    background:#147df5;
+    color:#fff;
+    font-weight:700
+}
+
+.submit-review:disabled{
+    opacity:.6;
+    cursor:not-allowed
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:850px){
+
+    .nav-links{
+        display:none
+    }
+
+    .stats-grid{
+        grid-template-columns:repeat(2,1fr)
+    }
+
+    .booking-details{
+        grid-template-columns:repeat(2,minmax(0,1fr))
+    }
+
+    .provider-profile-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr))
+    }
+}
+
+@media(max-width:600px){
+
+    .navbar{
+        min-height:68px;
+        padding:0 5%
+    }
+
+    .logo{
+        font-size:23px
+    }
+
+    .container{
+        margin:25px auto;
+        padding:0 14px
+    }
+
+    .dashboard-header{
+        flex-direction:column;
+        align-items:flex-start
+    }
+
+    .dashboard-header h1{
+        font-size:27px
+    }
+
+    .stats-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:10px
+    }
+
+    .stat-card{
+        padding:16px
+    }
+
+    .stat-number{
+        font-size:24px
+    }
+
+    .section-card{
+        padding:16px
+    }
+
+    .section-title h2{
+        font-size:19px
+    }
+
+    .booking-card{
+        padding:16px
+    }
+
+    .booking-top{
+        align-items:flex-start
+    }
+
+    .provider-avatar{
+        width:48px;
+        height:48px;
+        flex-basis:48px;
+        font-size:24px
+    }
+
+    .provider-info h3{
+        font-size:16px
+    }
+
+    .status{
+        font-size:10px;
+        padding:7px 9px
+    }
+
+    .booking-details{
+        gap:16px 10px
+    }
+
+    .detail-value{
+        font-size:13px
+    }
+
+    .address-box{
+        font-size:12px
+    }
+
+    .provider-profile-grid{
+        grid-template-columns:1fr
+    }
+
+    .payment-methods{
+        grid-template-columns:repeat(3,1fr)
+    }
+
+    .payment-actions,
+    .review-actions{
+        flex-direction:column
+    }
+}
+
+@media(max-width:390px){
+
+    .booking-top{
+        flex-direction:column
+    }
+
+    .stats-grid{
+        grid-template-columns:1fr 1fr
+    }
+
+    .booking-details{
+        grid-template-columns:1fr 1fr
+    }
+}
+</style>
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <a href="index.html" class="logo">
+        Local<span>Service</span>
+    </a>
+
+    <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="providers.html">Services</a></li>
+        <li><a href="user-dashboard.html">My Dashboard</a></li>
+    </ul>
+
+    <button class="logout-btn" onclick="logoutUser()">
+        Logout
+    </button>
+
+</nav>
+
+<main class="container">
+
+    <div class="dashboard-header">
+
+        <div>
+            <h1>My Dashboard</h1>
+            <p>Manage your service bookings</p>
+        </div>
+
+        <button
+            class="new-booking-btn"
+            onclick="newBooking()">
+            + Book New Service
+        </button>
+
+    </div>
+
+    <div class="user-card">
+
+        <div class="user-avatar">
+            👤
+        </div>
+
+        <div class="user-info">
+            <h2 id="userName">User</h2>
+            <p id="userEmail">user@example.com</p>
+        </div>
+
+    </div>
+
+    <div class="stats-grid">
+
+        <div class="stat-card">
+            <div class="stat-number" id="totalCount">0</div>
+            <div class="stat-title">Total Bookings</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-number pending-number" id="pendingCount">0</div>
+            <div class="stat-title">Pending</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-number accepted-number" id="acceptedCount">0</div>
+            <div class="stat-title">Accepted</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-number completed-number" id="completedCount">0</div>
+            <div class="stat-title">Completed</div>
+        </div>
+
+    </div>
+
+    <div class="section-card">
+
+        <div class="section-title">
+
+            <h2>My Bookings</h2>
+
+            <span
+                class="booking-count"
+                id="bookingCount">
+                0 bookings
+            </span>
+
+        </div>
+
+        <div id="bookingList"></div>
+
+        <div
+            class="empty-state"
+            id="emptyState">
+
+            <div class="empty-icon">
+                📋
+            </div>
+
+            <h3>No Bookings Yet</h3>
+
+            <p>
+                You haven't booked any service yet.
+            </p>
+
+            <button
+                class="new-booking-btn"
+                onclick="newBooking()">
+                Find a Service
+            </button>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+<!-- =========================
+     PAYMENT MODAL
+========================= -->
+
+<div
+    class="payment-overlay"
+    id="paymentOverlay">
+
+    <div class="payment-modal">
+
+        <h2>💳 Demo Payment</h2>
+
+        <p class="payment-subtitle">
+            Complete payment for your service.
+        </p>
+
+        <div class="payment-summary">
+
+            <div class="payment-row">
+                <span>Provider</span>
+                <strong id="paymentProvider">-</strong>
+            </div>
+
+            <div class="payment-row">
+                <span>Service</span>
+                <strong id="paymentService">-</strong>
+            </div>
+
+            <div class="payment-row">
+                <span>Amount</span>
+                <strong id="paymentAmount">₹0</strong>
+            </div>
+
+        </div>
+
+        <div class="payment-method-title">
+            Select Payment Method
+        </div>
+
+        <div class="payment-methods">
+
+            <button
+                type="button"
+                class="payment-method"
+                id="upiMethod"
+                onclick="selectPaymentMethod('UPI')">
+                📱<br>UPI
+            </button>
+
+            <button
+                type="button"
+                class="payment-method"
+                id="cardMethod"
+                onclick="selectPaymentMethod('Card')">
+                💳<br>Card
+            </button>
+
+            <button
+                type="button"
+                class="payment-method"
+                id="cashMethod"
+                onclick="selectPaymentMethod('Cash on Service')">
+                💵<br>Cash
+            </button>
+
+        </div>
+
+        <div class="demo-note">
+            ⚠️ <strong>Demo Payment:</strong>
+            This payment system is for college project testing.
+            No real money will be charged.
+        </div>
+
+        <div class="payment-actions">
+
+            <button
+                class="close-payment"
+                onclick="closePayment()">
+                Cancel
+            </button>
+
+            <button
+                class="confirm-payment"
+                id="confirmPaymentButton"
+                onclick="confirmPayment()">
+                Pay Now
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     REVIEW MODAL
+========================= -->
+
+<div
+    class="review-overlay"
+    id="reviewOverlay">
+
+    <div class="review-box">
+
+        <h2>Rate Your Service</h2>
+
+        <div class="rating-buttons">
+
+            <button
+                type="button"
+                onclick="selectRating(1)">
+                ★
+            </button>
+
+            <button
+                type="button"
+                onclick="selectRating(2)">
+                ★
+            </button>
+
+            <button
+                type="button"
+                onclick="selectRating(3)">
+                ★
+            </button>
+
+            <button
+                type="button"
+                onclick="selectRating(4)">
+                ★
+            </button>
+
+            <button
+                type="button"
+                onclick="selectRating(5)">
+                ★
+            </button>
+
+        </div>
+
+        <textarea
+            id="reviewText"
+            placeholder="Write your review...">
+        </textarea>
+
+        <div class="review-actions">
+
+            <button
+                class="close-review"
+                onclick="closeReview()">
+                Cancel
+            </button>
+
+            <button
+                class="submit-review"
+                onclick="submitReview()">
+                Submit Review
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+const API_BASE =
+    "http://127.0.0.1:5000/api";
+
+
+let selectedPaymentBookingId = null;
+let selectedPaymentAmount = 0;
+let selectedPaymentMethod = null;
+
+let selectedReviewBookingId = null;
+let selectedReviewProviderId = null;
+let selectedReviewRating = 0;
+
+let dashboardBookings = [];
+
+
+/* =========================
+   LOCAL STORAGE
+========================= */
+
+function getJSON(key) {
+
+    try {
+
+        return JSON.parse(
+            localStorage.getItem(key) || "null"
+        );
+
+    } catch (error) {
+
+        return null;
+
+    }
+
+}
+
+
+function getUser() {
+
+    return getJSON(
+        "localServiceUser"
+    );
+
+}
+
+
+function requireLogin() {
+
+    const user = getUser();
+
+    if (!user || !user.id) {
+
+        window.location.href =
+            "login.html";
+
+        return null;
+
+    }
+
+    return user;
+
+}
+
+
+/* =========================
+   SECURITY
+========================= */
+
+function escapeHTML(value) {
+
+    return String(value ?? "")
+
+        .replace(/&/g, "&amp;")
+
+        .replace(/</g, "&lt;")
+
+        .replace(/>/g, "&gt;")
+
+        .replace(/"/g, "&quot;")
+
+        .replace(/'/g, "&#039;");
+
+}
+
+
+/* =========================
+   TEXT
+========================= */
+
+function setText(id, value) {
+
+    const element =
+        document.getElementById(id);
+
+    if (element) {
+
+        element.textContent =
+            value ?? "";
+
+    }
+
+}
+
+
+/* =========================
+   DATE
+========================= */
+
+function formatDate(value) {
+
+    if (!value) {
+
+        return "Not specified";
+
+    }
+
+    const text =
+        String(value);
+
+    const match =
+        text.match(
+            /^(\d{4})-(\d{2})-(\d{2})/
+        );
+
+    if (match) {
+
+        const date =
+            new Date(
+                Number(match[1]),
+                Number(match[2]) - 1,
+                Number(match[3])
+            );
+
+        return date.toLocaleDateString(
+            "en-IN",
+            {
+                day:"2-digit",
+                month:"short",
+                year:"numeric"
+            }
+        );
+
+    }
+
+    const date =
+        new Date(value);
+
+    return Number.isNaN(
+        date.getTime()
+    )
+        ? text
+        : date.toLocaleDateString(
+            "en-IN",
+            {
+                day:"2-digit",
+                month:"short",
+                year:"numeric"
+            }
+        );
+
+}
+
+
+/* =========================
+   TIME
+========================= */
+
+function formatTime(value) {
+
+    if (!value) {
+
+        return "Not specified";
+
+    }
+
+    const text =
+        String(value);
+
+    const match =
+        text.match(
+            /^(\d{1,2}):(\d{2})/
+        );
+
+    if (match) {
+
+        let hour =
+            Number(match[1]);
+
+        const minute =
+            match[2];
+
+        const suffix =
+            hour >= 12
+                ? "PM"
+                : "AM";
+
+        hour =
+            hour % 12 || 12;
+
+        return `${hour}:${minute} ${suffix}`;
+
+    }
+
+    return text;
+
+}
+
+
+/* =========================
+   MONEY
+========================= */
+
+function money(value) {
+
+    const amount =
+        Number(value);
+
+    return Number.isFinite(amount)
+        ? `₹${amount.toFixed(2)}`
+        : "₹0.00";
+
+}
+
+
+/* =========================
+   LOAD DASHBOARD
+========================= */
+
+async function loadUserDashboard() {
+
+    const user =
+        requireLogin();
+
+    if (!user) return;
+
+    setText(
+        "userName",
+        user.name || "User"
+    );
+
+    setText(
+        "userEmail",
+        user.email || ""
+    );
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${API_BASE}/bookings/user/${encodeURIComponent(user.id)}`
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+
+            throw new Error(
+                data.message ||
+                "Unable to load bookings."
+            );
+
+        }
+
+
+        let bookings =
+            Array.isArray(data.bookings)
+                ? data.bookings
+                : [];
+
+
+        bookings =
+            await loadPaymentInformation(
+                bookings
+            );
+
+
+        dashboardBookings =
+            bookings;
+
+
+        updateStatistics(
+            bookings
+        );
+
+
+        renderBookings(
+            bookings
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Dashboard error:",
+            error
+        );
+
+        showBookingError(
+            error.message ||
+            "Unable to load bookings."
+        );
+
+    }
+
+}
+
+
+/* =========================
+   PAYMENT INFORMATION
+========================= */
+
+async function loadPaymentInformation(
+    bookings
+) {
+
+    return await Promise.all(
+
+        bookings.map(
+            async booking => {
+
+                const status =
+                    String(
+                        booking.status || ""
+                    ).toLowerCase();
+
+
+                if (
+                    status !== "accepted" &&
+                    status !== "completed"
+                ) {
+
+                    return {
+                        ...booking,
+                        payment:null,
+                        paymentPaid:false
+                    };
+
+                }
+
+
+                try {
+
+                    const response =
+                        await fetch(
+                            `${API_BASE}/payments/booking/${Number(booking.id)}`
+                        );
+
+
+                    if (!response.ok) {
+
+                        return {
+                            ...booking,
+                            payment:null,
+                            paymentPaid:false
+                        };
+
+                    }
+
+
+                    const data =
+                        await response.json();
+
+
+                    if (
+                        !data.success ||
+                        !Array.isArray(
+                            data.payments
+                        )
+                    ) {
+
+                        return {
+                            ...booking,
+                            payment:null,
+                            paymentPaid:false
+                        };
+
+                    }
+
+
+                    const payment =
+                        data.payments.find(
+                            item => {
+
+                                const state =
+                                    String(
+                                        item.status || ""
+                                    ).toLowerCase();
+
+
+                                return [
+                                    "success",
+                                    "successful",
+                                    "paid",
+                                    "completed"
+                                ].includes(state);
+
+                            }
+                        );
+
+
+                    return {
+                        ...booking,
+                        payment:
+                            payment || null,
+                        paymentPaid:
+                            Boolean(payment)
+                    };
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Payment lookup error:",
+                        error
+                    );
+
+
+                    return {
+                        ...booking,
+                        payment:null,
+                        paymentPaid:false
+                    };
+
+                }
+
+            }
+        )
+
+    );
+
+}
+
+
+/* =========================
+   STATISTICS
+========================= */
+
+function updateStatistics(
+    bookings
+) {
+
+    const count =
+        status =>
+            bookings.filter(
+                booking =>
+                    String(
+                        booking.status || ""
+                    ).toLowerCase() ===
+                    status
+            ).length;
+
+
+    setText(
+        "totalCount",
+        bookings.length
+    );
+
+    setText(
+        "pendingCount",
+        count("pending")
+    );
+
+    setText(
+        "acceptedCount",
+        count("accepted")
+    );
+
+    setText(
+        "completedCount",
+        count("completed")
+    );
+
+    setText(
+        "bookingCount",
+        `${bookings.length} booking${
+            bookings.length === 1
+                ? ""
+                : "s"
+        }`
+    );
+
+}
+
+
+/* =========================
+   RENDER BOOKINGS
+========================= */
+
+function renderBookings(
+    bookings
+) {
+
+    const container =
+        document.getElementById(
+            "bookingList"
+        );
+
+    const emptyState =
+        document.getElementById(
+            "emptyState"
+        );
+
+
+    if (!container) return;
+
+
+    if (!bookings.length) {
+
+        container.innerHTML =
+            "";
+
+        if (emptyState) {
+
+            emptyState.style.display =
+                "block";
+
+        }
+
+        return;
+
+    }
+
+
+    if (emptyState) {
+
+        emptyState.style.display =
+            "none";
+
+    }
+
+
+    container.innerHTML =
+        bookings
+            .map(createBookingCard)
+            .join("");
+
+}
+
+
+/* =========================
+   CREATE BOOKING CARD
+========================= */
+
+function createBookingCard(
+    booking
+) {
+
+    const status =
+        String(
+            booking.status ||
+            "pending"
+        ).toLowerCase();
+
+
+    const provider =
+        booking.provider_name ||
+        booking.provider ||
+        "Provider not assigned";
+
+
+    const service =
+        booking.service_name ||
+        booking.service ||
+        "Service";
+
+
+    /*
+       PROVIDER PRICE
+
+       Backend field:
+       provider_price
+
+       Fallback:
+       price
+    */
+
+    const providerPriceValue =
+        booking.provider_price ??
+        booking.price ??
+        null;
+
+
+    /*
+       BOOKING AMOUNT
+
+       This is the actual amount
+       used for payment.
+    */
+
+    const bookingAmount =
+        Number(
+            booking.total_amount ??
+            booking.amount ??
+            0
+        );
+
+
+    const providerPrice =
+        providerPriceValue !== null &&
+        providerPriceValue !== undefined &&
+        providerPriceValue !== ""
+            ? Number(
+                providerPriceValue
+            )
+            : null;
+
+
+    /*
+       PROVIDER EXPERIENCE
+    */
+
+    const providerExperience =
+        booking.provider_experience ??
+        0;
+
+
+    /*
+       PROVIDER LOCATION
+
+       Priority:
+       1. city
+       2. address
+    */
+
+    const providerLocation =
+        booking.provider_city ||
+        booking.provider_address ||
+        "Location not available";
+
+
+    const date =
+        formatDate(
+            booking.booking_date
+        );
+
+
+    const time =
+        formatTime(
+            booking.booking_time
+        );
+
+
+    const address =
+        booking.address ||
+        booking.service_address ||
+        "";
+
+
+    const paymentPaid =
+        Boolean(
+            booking.paymentPaid
+        );
+
+
+    const payment =
+        booking.payment ||
+        null;
+
+
+    /*
+       STATUS CLASS
+    */
+
+    const statusClasses = {
+
+        pending:
+            "status-pending",
+
+        accepted:
+            "status-accepted",
+
+        completed:
+            "status-completed",
+
+        cancelled:
+            "status-cancelled",
+
+        rejected:
+            "status-rejected"
+
+    };
+
+
+    const statusClass =
+        statusClasses[status] ||
+        "status-pending";
+
+
+    const statusLabel =
+        status.charAt(0).toUpperCase() +
+        status.slice(1);
+
+
+    /* =========================
+       ACTION
+    ========================= */
+
+    let action = "";
+
+
+    if (
+        status === "pending"
+    ) {
+
+        action = `
+
+            <button
+                class="action-btn cancel-btn"
+                onclick="cancelBooking(${Number(booking.id)})">
+
+                ✕ Cancel Booking
+
+            </button>
+
+        `;
+
+    }
+
+
+    else if (
+        status === "accepted" &&
+        !paymentPaid
+    ) {
+
+        action = `
+
+            <button
+                class="action-btn payment-btn"
+                onclick="makePayment(${Number(booking.id)})">
+
+                💳 Pay Now
+
+            </button>
+
+        `;
+
+    }
+
+
+    else if (
+        status === "accepted" &&
+        paymentPaid
+    ) {
+
+        action = `
+
+            <span class="paid-badge">
+
+                ✓ Paid
+
+            </span>
+
+        `;
+
+    }
+
+
+    else if (
+        status === "completed"
+    ) {
+
+        action = `
+
+            <button
+                class="action-btn review-btn"
+                onclick="openReview(
+                    ${Number(booking.id)},
+                    ${Number(
+                        booking.provider_id || 0
+                    )}
+                )">
+
+                ⭐ Rate Service
+
+            </button>
+
+        `;
+
+    }
+
+
+    /* =========================
+       PAYMENT BOX
+    ========================= */
+
+    let paymentBox = "";
+
+
+    if (
+        paymentPaid &&
+        payment
+    ) {
+
+        paymentBox = `
+
+            <div class="payment-status-box payment-paid">
+
+                <span class="payment-status-text">
+
+                    ✓ Payment Successful
+
+                </span>
+
+                <span class="paid-badge">
+
+                    PAID
+
+                </span>
+
+                <div class="payment-id">
+
+                    Transaction ID:
+                    ${escapeHTML(
+                        payment.transaction_id ||
+                        "DEMO"
+                    )}
+
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+
+    else if (
+        status === "accepted"
+    ) {
+
+        paymentBox = `
+
+            <div class="payment-status-box payment-pending">
+
+                <span class="payment-status-text">
+
+                    ⚠ Payment Pending
+
+                </span>
+
+                <span>
+
+                    Please complete payment.
+
+                </span>
+
+            </div>
+
+        `;
+
+    }
+
+
+    /* =========================
+       PROVIDER PRICE
+    ========================= */
+
+    const providerPriceLine =
+        providerPrice !== null &&
+        Number.isFinite(
+            providerPrice
+        )
+
+        ? `
+
+            <div class="booking-detail">
+
+                <span class="detail-label">
+
+                    💰 Provider Price
+
+                </span>
+
+                <span
+                    class="detail-value amount-value">
+
+                    ${money(providerPrice)}
+
+                </span>
+
+            </div>
+
+        `
+
+        : `
+
+            <div class="booking-detail">
+
+                <span class="detail-label">
+
+                    💰 Provider Price
+
+                </span>
+
+                <span class="detail-value">
+
+                    On Request
+
+                </span>
+
+            </div>
+
+        `;
+
+
+    /* =========================
+       PROVIDER EXPERIENCE
+    ========================= */
+
+    const providerExperienceLine = `
+
+        <div class="booking-detail">
+
+            <span class="detail-label">
+
+                ⭐ Experience
+
+            </span>
+
+            <span class="detail-value">
+
+                ${escapeHTML(
+                    String(
+                        providerExperience
+                    )
+                )}
+                Years
+
+            </span>
+
+        </div>
+
+    `;
+
+
+    /* =========================
+       PROVIDER LOCATION
+    ========================= */
+
+    const providerLocationLine = `
+
+        <div class="booking-detail">
+
+            <span class="detail-label">
+
+                📍 Provider Location
+
+            </span>
+
+            <span class="detail-value">
+
+                ${escapeHTML(
+                    providerLocation
+                )}
+
+            </span>
+
+        </div>
+
+    `;
+
+
+    /* =========================
+       FINAL CARD
+    ========================= */
+
+    return `
+
+        <article class="booking-card">
+
+
+            <!-- PROVIDER HEADER -->
+
+            <div class="booking-top">
+
+                <div class="provider-info">
+
+                    <div class="provider-avatar">
+
+                        👨‍🔧
+
+                    </div>
+
+
+                    <div>
+
+                        <h3>
+
+                            ${escapeHTML(
+                                provider
+                            )}
+
+                        </h3>
+
+
+                        <div class="provider-service">
+
+                            ${escapeHTML(
+                                service
+                            )}
+
+                        </div>
+
+
+                        <div class="booking-id">
+
+                            Booking ID:
+                            #${escapeHTML(
+                                booking.id
+                            )}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <span
+                    class="status ${statusClass}">
+
+                    ${escapeHTML(
+                        statusLabel
+                    )}
+
+                </span>
+
+            </div>
+
+
+            <!-- BOOKING INFORMATION -->
+
+            <div class="booking-details">
+
+
+                <div class="booking-detail">
+
+                    <span class="detail-label">
+
+                        📅 Booking Date
+
+                    </span>
+
+                    <span class="detail-value">
+
+                        ${escapeHTML(date)}
+
+                    </span>
+
+                </div>
+
+
+                <div class="booking-detail">
+
+                    <span class="detail-label">
+
+                        ⏰ Booking Time
+
+                    </span>
+
+                    <span class="detail-value">
+
+                        ${escapeHTML(time)}
+
+                    </span>
+
+                </div>
+
+
+                ${providerPriceLine}
+
+
+                ${providerExperienceLine}
+
+
+                ${providerLocationLine}
+
+
+                <div class="booking-detail">
+
+                    <span class="detail-label">
+
+                        💰 Booking Amount
+
+                    </span>
+
+                    <span
+                        class="detail-value amount-value">
+
+                        ${money(
+                            bookingAmount
+                        )}
+
+                    </span>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- SERVICE ADDRESS -->
+
+            ${
+                address
+
+                ? `
+
+                    <div class="address-box">
+
+                        <span class="address-icon">
+
+                            📍
+
+                        </span>
+
+                        <span>
+
+                            <strong>
+                                Service Address
+                            </strong>
+
+                            <br>
+
+                            ${escapeHTML(
+                                address
+                            )}
+
+                        </span>
+
+                    </div>
+
+                `
+
+                : ""
+
+            }
+
+
+            <!-- PAYMENT -->
+
+            ${paymentBox}
+
+
+            <!-- ACTION -->
+
+            ${
+                action
+
+                ? `
+
+                    <div class="booking-actions">
+
+                        ${action}
+
+                    </div>
+
+                `
+
+                : ""
+
+            }
+
+
+        </article>
+
+    `;
+
+}
+
+
+/* =========================
+   CANCEL BOOKING
+========================= */
+
+async function cancelBooking(
+    bookingId
+) {
+
+    if (
+        !confirm(
+            "Are you sure you want to cancel this booking?"
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${API_BASE}/bookings/${bookingId}/status`,
+                {
+                    method:"PUT",
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+                    body:JSON.stringify({
+                        status:"cancelled"
+                    })
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+
+            throw new Error(
+                data.message ||
+                "Unable to cancel booking."
+            );
+
+        }
+
+
+        alert(
+            "Booking cancelled successfully."
+        );
+
+
+        await loadUserDashboard();
+
+
+    } catch (error) {
+
+        console.error(
+            "Cancel booking error:",
+            error
+        );
+
+
+        alert(
+            error.message ||
+            "Unable to cancel booking."
+        );
+
+    }
+
+}
+
+
+/* =========================
+   MAKE PAYMENT
+========================= */
+
+function makePayment(
+    bookingId
+) {
+
+    const user =
+        requireLogin();
+
+    if (!user) return;
+
+
+    const booking =
+        dashboardBookings.find(
+            item =>
+                Number(item.id) ===
+                Number(bookingId)
+        );
+
+
+    if (!booking) {
+
+        return alert(
+            "Booking not found."
+        );
+
+    }
+
+
+    if (
+        String(
+            booking.status || ""
+        ).toLowerCase() !==
+        "accepted"
+    ) {
+
+        return alert(
+            "Payment is available only after the provider accepts the booking."
+        );
+
+    }
+
+
+    if (
+        booking.paymentPaid
+    ) {
+
+        return alert(
+            "Payment has already been completed for this booking."
+        );
+
+    }
+
+
+    const amount =
+        Number(
+            booking.total_amount ??
+            booking.amount ??
+            0
+        );
+
+
+    if (amount <= 0) {
+
+        return alert(
+            "Invalid booking amount."
+        );
+
+    }
+
+
+    selectedPaymentBookingId =
+        Number(booking.id);
+
+
+    selectedPaymentAmount =
+        amount;
+
+
+    selectedPaymentMethod =
+        "UPI";
+
+
+    setText(
+        "paymentProvider",
+        booking.provider_name ||
+        booking.provider ||
+        "Service Provider"
+    );
+
+
+    setText(
+        "paymentService",
+        booking.service_name ||
+        booking.service ||
+        "Service"
+    );
+
+
+    setText(
+        "paymentAmount",
+        money(amount)
+    );
+
+
+    selectPaymentMethod(
+        "UPI"
+    );
+
+
+    document.getElementById(
+        "paymentOverlay"
+    ).style.display =
+        "flex";
+
+}
+
+
+/* =========================
+   PAYMENT METHOD
+========================= */
+
+function selectPaymentMethod(
+    method
+) {
+
+    selectedPaymentMethod =
+        String(
+            method || ""
+        ).trim();
+
+
+    document
+        .querySelectorAll(
+            ".payment-method"
+        )
+        .forEach(
+            button =>
+                button.classList.remove(
+                    "selected"
+                )
+        );
+
+
+    const ids = {
+
+        "UPI":
+            "upiMethod",
+
+        "Card":
+            "cardMethod",
+
+        "Cash on Service":
+            "cashMethod"
+
+    };
+
+
+    const button =
+        document.getElementById(
+            ids[selectedPaymentMethod]
+        );
+
+
+    if (button) {
+
+        button.classList.add(
+            "selected"
+        );
+
+    }
+
+}
+
+
+/* =========================
+   CONFIRM PAYMENT
+========================= */
+
+async function confirmPayment() {
+
+    const user =
+        requireLogin();
+
+    if (!user) return;
+
+
+    if (
+        !selectedPaymentBookingId
+    ) {
+
+        return alert(
+            "No booking selected for payment."
+        );
+
+    }
+
+
+    if (
+        !selectedPaymentMethod
+    ) {
+
+        return alert(
+            "Please select a payment method."
+        );
+
+    }
+
+
+    if (
+        selectedPaymentAmount <= 0
+    ) {
+
+        return alert(
+            "Invalid payment amount."
+        );
+
+    }
+
+
+    if (
+        !confirm(
+            `Confirm payment of ${money(
+                selectedPaymentAmount
+            )}?`
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    const button =
+        document.getElementById(
+            "confirmPaymentButton"
+        );
+
+
+    button.disabled =
+        true;
+
+
+    button.textContent =
+        "Processing...";
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${API_BASE}/payments`,
+                {
+                    method:"POST",
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+                    body:JSON.stringify({
+
+                        booking_id:
+                            Number(
+                                selectedPaymentBookingId
+                            ),
+
+                        user_id:
+                            Number(
+                                user.id
+                            ),
+
+                        amount:
+                            Number(
+                                selectedPaymentAmount
+                            ),
+
+                        payment_method:
+                            selectedPaymentMethod
+
+                    })
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+
+            throw new Error(
+                data.message ||
+                "Payment failed."
+            );
+
+        }
+
+
+        const transactionId =
+            data.payment?.transaction_id ||
+            "DEMO";
+
+
+        closePayment();
+
+
+        alert(
+            "✅ Payment Successful!\n\nTransaction ID: " +
+            transactionId
+        );
+
+
+        await loadUserDashboard();
+
+
+    } catch (error) {
+
+        console.error(
+            "Payment error:",
+            error
+        );
+
+
+        alert(
+            error.message ||
+            "Payment failed."
+        );
+
+    } finally {
+
+        button.disabled =
+            false;
+
+        button.textContent =
+            "Pay Now";
+
+    }
+
+}
+
+
+/* =========================
+   CLOSE PAYMENT
+========================= */
+
+function closePayment() {
+
+    document.getElementById(
+        "paymentOverlay"
+    ).style.display =
+        "none";
+
+
+    selectedPaymentBookingId =
+        null;
+
+
+    selectedPaymentAmount =
+        0;
+
+
+    selectedPaymentMethod =
+        null;
+
+
+    document
+        .querySelectorAll(
+            ".payment-method"
+        )
+        .forEach(
+            button =>
+                button.classList.remove(
+                    "selected"
+                )
+        );
+
+}
+
+
+/* =========================
+   REVIEW
+========================= */
+
+function openReview(
+    bookingId,
+    providerId
+) {
+
+    const user =
+        requireLogin();
+
+    if (!user) return;
+
+
+    selectedReviewBookingId =
+        Number(bookingId);
+
+
+    selectedReviewProviderId =
+        Number(providerId);
+
+
+    selectedReviewRating =
+        0;
+
+
+    document
+        .querySelectorAll(
+            ".rating-buttons button"
+        )
+        .forEach(
+            button =>
+                button.classList.remove(
+                    "selected"
+                )
+        );
+
+
+    document.getElementById(
+        "reviewText"
+    ).value = "";
+
+
+    document.getElementById(
+        "reviewOverlay"
+    ).style.display =
+        "flex";
+
+}
+
+
+/* =========================
+   SELECT RATING
+========================= */
+
+function selectRating(
+    rating
+) {
+
+    const value =
+        Number(rating);
+
+
+    if (
+        value < 1 ||
+        value > 5
+    ) {
+
+        return;
+
+    }
+
+
+    selectedReviewRating =
+        value;
+
+
+    document
+        .querySelectorAll(
+            ".rating-buttons button"
+        )
+        .forEach(
+            (button,index) => {
+
+                button.classList.toggle(
+                    "selected",
+                    index < value
+                );
+
+            }
+        );
+
+}
+
+
+/* =========================
+   SUBMIT REVIEW
+========================= */
+
+async function submitReview() {
+
+    const user =
+        requireLogin();
+
+    if (!user) return;
+
+
+    if (
+        !selectedReviewBookingId
+    ) {
+
+        return alert(
+            "No booking selected for review."
+        );
+
+    }
+
+
+    if (
+        !selectedReviewProviderId
+    ) {
+
+        return alert(
+            "Provider information is missing."
+        );
+
+    }
+
+
+    if (
+        !selectedReviewRating
+    ) {
+
+        return alert(
+            "Please select a rating from 1 to 5 stars."
+        );
+
+    }
+
+
+    const textarea =
+        document.getElementById(
+            "reviewText"
+        );
+
+
+    const comment =
+        textarea.value.trim();
+
+
+    if (!comment) {
+
+        alert(
+            "Please write a short review."
+        );
+
+        textarea.focus();
+
+        return;
+
+    }
+
+
+    const button =
+        document.querySelector(
+            ".submit-review"
+        );
+
+
+    button.disabled =
+        true;
+
+
+    button.textContent =
+        "Submitting...";
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${API_BASE}/reviews`,
+                {
+                    method:"POST",
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+                    body:JSON.stringify({
+
+                        user_id:
+                            Number(
+                                user.id
+                            ),
+
+                        provider_id:
+                            Number(
+                                selectedReviewProviderId
+                            ),
+
+                        booking_id:
+                            Number(
+                                selectedReviewBookingId
+                            ),
+
+                        rating:
+                            Number(
+                                selectedReviewRating
+                            ),
+
+                        comment:
+                            comment
+
+                    })
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+
+            throw new Error(
+                data.message ||
+                "Unable to submit review."
+            );
+
+        }
+
+
+        closeReview();
+
+
+        alert(
+            "⭐ Review submitted successfully!"
+        );
+
+
+        await loadUserDashboard();
+
+
+    } catch (error) {
+
+        console.error(
+            "Review error:",
+            error
+        );
+
+
+        alert(
+            error.message ||
+            "Unable to submit review."
+        );
+
+    } finally {
+
+        button.disabled =
+            false;
+
+        button.textContent =
+            "Submit Review";
+
+    }
+
+}
+
+
+/* =========================
+   CLOSE REVIEW
+========================= */
+
+function closeReview() {
+
+    document.getElementById(
+        "reviewOverlay"
+    ).style.display =
+        "none";
+
+
+    selectedReviewBookingId =
+        null;
+
+
+    selectedReviewProviderId =
+        null;
+
+
+    selectedReviewRating =
+        0;
+
+
+    document
+        .querySelectorAll(
+            ".rating-buttons button"
+        )
+        .forEach(
+            button =>
+                button.classList.remove(
+                    "selected"
+                )
+        );
+
+
+    document.getElementById(
+        "reviewText"
+    ).value = "";
+
+}
+
+
+/* =========================
+   NEW BOOKING
+========================= */
+
+function newBooking() {
+
+    window.location.href =
+        "index.html";
+
+}
+
+
+/* =========================
+   ERROR
+========================= */
+
+function showBookingError(
+    message
+) {
+
+    const container =
+        document.getElementById(
+            "bookingList"
+        );
+
+
+    const emptyState =
+        document.getElementById(
+            "emptyState"
+        );
+
+
+    if (emptyState) {
+
+        emptyState.style.display =
+            "none";
+
+    }
+
+
+    container.innerHTML = `
+
+        <div
+            style="
+                padding:25px;
+                text-align:center;
+                color:#b42318;
+            ">
+
+            ${escapeHTML(
+                message
+            )}
+
+        </div>
+
+    `;
+
+}
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+function logoutUser() {
+
+    localStorage.removeItem(
+        "localServiceUser"
+    );
+
+    localStorage.removeItem(
+        "localServiceLoggedIn"
+    );
+
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+/* =========================
+   START
+========================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    loadUserDashboard
+);
+
+</script>
+
+</body>
+</html>

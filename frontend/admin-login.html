@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Login - Local Service</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            min-height: 100vh;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    rgba(3, 20, 30, 0.86),
+                    rgba(3, 20, 30, 0.52)
+                ),
+                url("image/background.png");
+
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 30px;
+        }
+
+        /* ================= CONTAINER ================= */
+
+        .login-container {
+            width: 100%;
+            max-width: 460px;
+
+            background: rgba(255, 255, 255, 0.97);
+
+            border-radius: 18px;
+
+            padding: 38px;
+
+            box-shadow:
+                0 25px 60px rgba(0, 0, 0, 0.30);
+        }
+
+        /* ================= LOGO ================= */
+
+        .logo {
+            text-align: center;
+
+            margin-bottom: 8px;
+
+            font-size: 29px;
+            font-weight: 800;
+
+            color: #172033;
+        }
+
+        .logo span {
+            color: #147df5;
+        }
+
+        /* ================= ADMIN BADGE ================= */
+
+        .admin-badge {
+            width: fit-content;
+
+            margin: 0 auto 18px;
+
+            padding: 6px 14px;
+
+            border-radius: 20px;
+
+            background: #eff6ff;
+
+            border: 1px solid #bfdbfe;
+
+            color: #1d4ed8;
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.5px;
+        }
+
+        /* ================= HEADING ================= */
+
+        .login-container h1 {
+            text-align: center;
+
+            margin-bottom: 8px;
+
+            font-size: 28px;
+
+            color: #172033;
+        }
+
+        .subtitle {
+            text-align: center;
+
+            margin-bottom: 28px;
+
+            color: #64748b;
+
+            font-size: 14px;
+
+            line-height: 1.5;
+        }
+
+        /* ================= FORM ================= */
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+
+            margin-bottom: 7px;
+
+            color: #334155;
+
+            font-size: 14px;
+
+            font-weight: 700;
+        }
+
+        .form-group input {
+            width: 100%;
+
+            padding: 13px 14px;
+
+            border: 1px solid #d8e0ea;
+
+            border-radius: 9px;
+
+            outline: none;
+
+            background: #ffffff;
+
+            color: #172033;
+
+            font-size: 15px;
+
+            transition: 0.2s;
+        }
+
+        .form-group input:focus {
+            border-color: #147df5;
+
+            box-shadow:
+                0 0 0 3px rgba(20, 125, 245, 0.10);
+        }
+
+        /* ================= PASSWORD ================= */
+
+        .password-box {
+            position: relative;
+        }
+
+        .password-box input {
+            padding-right: 65px;
+        }
+
+        .show-password {
+            position: absolute;
+
+            right: 12px;
+
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            border: none;
+
+            background: transparent;
+
+            color: #147df5;
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+        }
+
+        /* ================= LOGIN BUTTON ================= */
+
+        .login-submit {
+            width: 100%;
+
+            margin-top: 5px;
+
+            padding: 14px;
+
+            border: none;
+
+            border-radius: 9px;
+
+            background: #147df5;
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition: 0.3s;
+        }
+
+        .login-submit:hover {
+            background: #0867d2;
+
+            transform: translateY(-1px);
+        }
+
+        .login-submit:disabled {
+            opacity: 0.7;
+
+            cursor: not-allowed;
+
+            transform: none;
+        }
+
+        /* ================= ERROR ================= */
+
+        .error-message {
+            display: none;
+
+            margin-bottom: 15px;
+
+            padding: 11px 13px;
+
+            border-radius: 8px;
+
+            background: #fff1f2;
+
+            border: 1px solid #fecdd3;
+
+            color: #be123c;
+
+            font-size: 13px;
+
+            line-height: 1.4;
+        }
+
+        /* ================= SUCCESS ================= */
+
+        .success-message {
+            display: none;
+
+            margin-bottom: 15px;
+
+            padding: 11px 13px;
+
+            border-radius: 8px;
+
+            background: #f0fdf4;
+
+            border: 1px solid #bbf7d0;
+
+            color: #15803d;
+
+            font-size: 13px;
+
+            line-height: 1.4;
+        }
+
+        /* ================= SECURITY INFO ================= */
+
+        .security-info {
+            margin-top: 20px;
+
+            padding: 12px 14px;
+
+            border-radius: 8px;
+
+            background: #f8fafc;
+
+            border: 1px solid #e2e8f0;
+
+            color: #64748b;
+
+            font-size: 12px;
+
+            line-height: 1.5;
+
+            text-align: center;
+        }
+
+        /* ================= BACK LOGIN ================= */
+
+        .back-login {
+            text-align: center;
+
+            margin-top: 20px;
+
+            color: #64748b;
+
+            font-size: 14px;
+        }
+
+        .back-login a {
+            color: #147df5;
+
+            text-decoration: none;
+
+            font-weight: 700;
+        }
+
+        .back-login a:hover {
+            text-decoration: underline;
+        }
+
+        /* ================= HOME ================= */
+
+        .home-link {
+            display: block;
+
+            margin-top: 14px;
+
+            text-align: center;
+
+            color: #147df5;
+
+            text-decoration: none;
+
+            font-size: 14px;
+
+            font-weight: 700;
+        }
+
+        .home-link:hover {
+            text-decoration: underline;
+        }
+
+        /* ================= MOBILE ================= */
+
+        @media (max-width: 550px) {
+
+            body {
+                padding: 18px;
+            }
+
+            .login-container {
+                padding: 28px 22px;
+            }
+
+            .login-container h1 {
+                font-size: 25px;
+            }
+
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- ================= ADMIN LOGIN CARD ================= -->
+
+    <div class="login-container">
+
+        <!-- LOGO -->
+
+        <div class="logo">
+            Local<span>Service</span>
+        </div>
+
+        <!-- ADMIN BADGE -->
+
+        <div class="admin-badge">
+            Administrator Access
+        </div>
+
+        <!-- HEADING -->
+
+        <h1>
+            Admin Login
+        </h1>
+
+        <p class="subtitle">
+            Login to manage users, providers, bookings and platform activity.
+        </p>
+
+
+        <!-- ERROR -->
+
+        <div
+            id="errorMessage"
+            class="error-message">
+        </div>
+
+
+        <!-- SUCCESS -->
+
+        <div
+            id="successMessage"
+            class="success-message">
+        </div>
+
+
+        <!-- ================= FORM ================= -->
+
+        <form
+            id="adminLoginForm"
+            onsubmit="loginAdmin(event)">
+
+            <!-- EMAIL -->
+
+            <div class="form-group">
+
+                <label for="email">
+                    Admin Email
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="Enter admin email"
+                    autocomplete="username"
+                    required>
+
+            </div>
+
+
+            <!-- PASSWORD -->
+
+            <div class="form-group">
+
+                <label for="password">
+                    Password
+                </label>
+
+                <div class="password-box">
+
+                    <input
+                        type="password"
+                        id="password"
+                        placeholder="Enter admin password"
+                        autocomplete="current-password"
+                        required>
+
+                    <button
+                        type="button"
+                        class="show-password"
+                        id="showPassword">
+
+                        Show
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- LOGIN -->
+
+            <button
+                type="submit"
+                class="login-submit"
+                id="loginButton">
+
+                Admin Login
+
+            </button>
+
+        </form>
+
+
+        <!-- SECURITY -->
+
+        <div class="security-info">
+
+            🔒 Admin access is restricted.
+            Only authorized administrators can access the admin dashboard.
+
+        </div>
+
+
+        <!-- USER/PROVIDER LOGIN -->
+
+        <div class="back-login">
+
+            Not an admin?
+
+            <a href="login.html">
+                User / Provider Login
+            </a>
+
+        </div>
+
+
+        <!-- HOME -->
+
+        <a
+            href="index(2).html"
+            class="home-link">
+
+            ← Back to Home
+
+        </a>
+
+    </div>
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+
+    <script>
+
+        const API_BASE_URL =
+            "http://127.0.0.1:5000";
+
+
+        /*
+            SHOW / HIDE PASSWORD
+        */
+
+        document
+            .getElementById("showPassword")
+            .addEventListener("click", function () {
+
+                const password =
+                    document.getElementById("password");
+
+
+                if (password.type === "password") {
+
+                    password.type = "text";
+
+                    this.innerText = "Hide";
+
+                } else {
+
+                    password.type = "password";
+
+                    this.innerText = "Show";
+
+                }
+
+            });
+
+
+        /*
+            ADMIN LOGIN
+        */
+
+        async function loginAdmin(event) {
+
+            event.preventDefault();
+
+
+            const email =
+                document.getElementById("email")
+                    .value
+                    .trim()
+                    .toLowerCase();
+
+
+            const password =
+                document.getElementById("password")
+                    .value;
+
+
+            const loginButton =
+                document.getElementById("loginButton");
+
+
+            hideMessages();
+
+
+            /*
+                VALIDATION
+            */
+
+            if (!email) {
+
+                showError(
+                    "Please enter the admin email."
+                );
+
+                return;
+
+            }
+
+
+            if (!password) {
+
+                showError(
+                    "Please enter the admin password."
+                );
+
+                return;
+
+            }
+
+
+            /*
+                DISABLE BUTTON
+            */
+
+            loginButton.disabled = true;
+
+            loginButton.innerText =
+                "Logging in...";
+
+
+            try {
+
+                /*
+                    ADMIN LOGIN API
+
+                    POST:
+                    /api/admin/login
+                */
+
+                const response = await fetch(
+
+                    `${API_BASE_URL}/api/admin/login`,
+
+                    {
+
+                        method: "POST",
+
+                        headers: {
+
+                            "Content-Type":
+                                "application/json"
+
+                        },
+
+                        body: JSON.stringify({
+
+                            email: email,
+
+                            password: password
+
+                        })
+
+                    }
+
+                );
+
+
+                let data;
+
+
+                try {
+
+                    data =
+                        await response.json();
+
+                } catch (jsonError) {
+
+                    throw new Error(
+                        "Invalid response received from server."
+                    );
+
+                }
+
+
+                /*
+                    LOGIN ERROR
+                */
+
+                if (
+                    !response.ok ||
+                    !data.success
+                ) {
+
+                    showError(
+
+                        data.message ||
+                        "Invalid admin email or password."
+
+                    );
+
+
+                    loginButton.disabled =
+                        false;
+
+                    loginButton.innerText =
+                        "Admin Login";
+
+                    return;
+
+                }
+
+
+                /*
+                    ADMIN SESSION
+
+                    Password is NEVER stored.
+                */
+
+                const admin =
+                    data.admin || {};
+
+
+                localStorage.setItem(
+                    "adminLoggedIn",
+                    "true"
+                );
+
+
+                localStorage.setItem(
+                    "localServiceAdmin",
+                    JSON.stringify({
+
+                        id:
+                            admin.id || "",
+
+                        name:
+                            admin.name ||
+                            admin.full_name ||
+                            "",
+
+                        email:
+                            admin.email ||
+                            email
+
+                    })
+                );
+
+
+                /*
+                    SUCCESS
+                */
+
+                showSuccess(
+                    "Admin login successful! Redirecting..."
+                );
+
+
+                /*
+                    REDIRECT
+                */
+
+                setTimeout(function () {
+
+                    window.location.href =
+                        "admin-dashboard.html";
+
+                }, 800);
+
+
+            } catch (error) {
+
+                console.error(
+                    "Admin Login Error:",
+                    error
+                );
+
+
+                showError(
+
+                    "Unable to connect to server. Please make sure the backend is running."
+
+                );
+
+
+                loginButton.disabled =
+                    false;
+
+                loginButton.innerText =
+                    "Admin Login";
+
+            }
+
+        }
+
+
+        /*
+            SHOW ERROR
+        */
+
+        function showError(message) {
+
+            const errorMessage =
+                document.getElementById(
+                    "errorMessage"
+                );
+
+
+            const successMessage =
+                document.getElementById(
+                    "successMessage"
+                );
+
+
+            successMessage.style.display =
+                "none";
+
+
+            errorMessage.innerText =
+                message;
+
+
+            errorMessage.style.display =
+                "block";
+
+        }
+
+
+        /*
+            SHOW SUCCESS
+        */
+
+        function showSuccess(message) {
+
+            const errorMessage =
+                document.getElementById(
+                    "errorMessage"
+                );
+
+
+            const successMessage =
+                document.getElementById(
+                    "successMessage"
+                );
+
+
+            errorMessage.style.display =
+                "none";
+
+
+            successMessage.innerText =
+                message;
+
+
+            successMessage.style.display =
+                "block";
+
+        }
+
+
+        /*
+            HIDE MESSAGES
+        */
+
+        function hideMessages() {
+
+            document.getElementById(
+                "errorMessage"
+            ).style.display = "none";
+
+
+            document.getElementById(
+                "successMessage"
+            ).style.display = "none";
+
+        }
+
+    </script>
+
+</body>
+
+</html>

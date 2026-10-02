@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login - Local Service</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            min-height: 100vh;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    rgba(3, 20, 30, 0.82),
+                    rgba(3, 20, 30, 0.48)
+                ),
+                url("image/background.png");
+
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 30px;
+        }
+
+        /* ================= CONTAINER ================= */
+
+        .login-container {
+            width: 100%;
+            max-width: 480px;
+
+            background: rgba(255, 255, 255, 0.97);
+
+            border-radius: 18px;
+
+            padding: 38px;
+
+            box-shadow:
+                0 25px 60px rgba(0, 0, 0, 0.30);
+        }
+
+        /* ================= LOGO ================= */
+
+        .logo {
+            text-align: center;
+
+            margin-bottom: 8px;
+
+            font-size: 29px;
+            font-weight: 800;
+
+            color: #172033;
+        }
+
+        .logo span {
+            color: #147df5;
+        }
+
+        /* ================= HEADING ================= */
+
+        .login-container h1 {
+            text-align: center;
+
+            margin-bottom: 8px;
+
+            font-size: 28px;
+
+            color: #172033;
+        }
+
+        .subtitle {
+            text-align: center;
+
+            margin-bottom: 22px;
+
+            color: #64748b;
+
+            font-size: 14px;
+        }
+
+        /* ================= LOGIN TYPE ================= */
+
+        .login-type {
+            display: grid;
+
+            grid-template-columns: repeat(3, 1fr);
+
+            gap: 8px;
+
+            margin-bottom: 22px;
+        }
+
+        .login-type button {
+            padding: 11px 8px;
+
+            border: 1px solid #d8e0ea;
+
+            border-radius: 9px;
+
+            background: #f8fafc;
+
+            color: #475569;
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+        .login-type button:hover {
+            border-color: #147df5;
+
+            color: #147df5;
+        }
+
+        .login-type button.active {
+            background: #147df5;
+
+            border-color: #147df5;
+
+            color: white;
+        }
+
+        /* ================= FORM ================= */
+
+        .form-group {
+            margin-bottom: 17px;
+        }
+
+        .form-group label {
+            display: block;
+
+            margin-bottom: 7px;
+
+            color: #334155;
+
+            font-size: 14px;
+
+            font-weight: 700;
+        }
+
+        .form-group input {
+            width: 100%;
+
+            padding: 13px 14px;
+
+            border: 1px solid #d8e0ea;
+
+            border-radius: 9px;
+
+            outline: none;
+
+            background: #ffffff;
+
+            color: #172033;
+
+            font-size: 15px;
+
+            transition: 0.2s;
+        }
+
+        .form-group input:focus {
+            border-color: #147df5;
+
+            box-shadow:
+                0 0 0 3px rgba(20, 125, 245, 0.10);
+        }
+
+        /* ================= LOGIN BUTTON ================= */
+
+        .login-submit {
+            width: 100%;
+
+            margin-top: 8px;
+
+            padding: 14px;
+
+            border: none;
+
+            border-radius: 9px;
+
+            background: #147df5;
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition: 0.3s;
+        }
+
+        .login-submit:hover {
+            background: #0867d2;
+
+            transform: translateY(-1px);
+        }
+
+        .login-submit:disabled {
+            opacity: 0.7;
+
+            cursor: not-allowed;
+
+            transform: none;
+        }
+
+        /* ================= SIGNUP ================= */
+
+        .signup-info {
+            text-align: center;
+
+            margin-top: 22px;
+
+            color: #64748b;
+
+            font-size: 14px;
+        }
+
+        .signup-link {
+            color: #147df5;
+
+            text-decoration: none;
+
+            font-weight: 700;
+        }
+
+        .signup-link:hover {
+            text-decoration: underline;
+        }
+
+        /* ================= PROVIDER SIGNUP ================= */
+
+        .provider-info {
+            text-align: center;
+
+            margin-top: 10px;
+
+            color: #64748b;
+
+            font-size: 13px;
+        }
+
+        .provider-link {
+            color: #147df5;
+
+            text-decoration: none;
+
+            font-weight: 700;
+        }
+
+        .provider-link:hover {
+            text-decoration: underline;
+        }
+
+        /* ================= HOME ================= */
+
+        .home-link {
+            display: block;
+
+            margin-top: 14px;
+
+            text-align: center;
+
+            color: #147df5;
+
+            text-decoration: none;
+
+            font-size: 14px;
+
+            font-weight: 700;
+        }
+
+        .home-link:hover {
+            text-decoration: underline;
+        }
+
+        /* ================= ERROR ================= */
+
+        .error-message {
+            display: none;
+
+            margin-bottom: 15px;
+
+            padding: 11px 13px;
+
+            border-radius: 8px;
+
+            background: #fff1f2;
+
+            border: 1px solid #fecdd3;
+
+            color: #be123c;
+
+            font-size: 13px;
+        }
+
+        /* ================= SUCCESS ================= */
+
+        .success-message {
+            display: none;
+
+            margin-bottom: 15px;
+
+            padding: 11px 13px;
+
+            border-radius: 8px;
+
+            background: #f0fdf4;
+
+            border: 1px solid #bbf7d0;
+
+            color: #15803d;
+
+            font-size: 13px;
+        }
+
+        /* ================= MOBILE ================= */
+
+        @media (max-width: 550px) {
+
+            body {
+                padding: 18px;
+            }
+
+            .login-container {
+                padding: 28px 22px;
+            }
+
+            .login-container h1 {
+                font-size: 25px;
+            }
+
+            .login-type button {
+                font-size: 12px;
+            }
+
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- ================= LOGIN CARD ================= -->
+
+    <div class="login-container">
+
+        <!-- LOGO -->
+
+        <div class="logo">
+            Local<span>Service</span>
+        </div>
+
+        <!-- HEADING -->
+
+        <h1 id="loginTitle">
+            Welcome Back
+        </h1>
+
+        <p class="subtitle" id="loginSubtitle">
+            Login as a User to continue booking local services.
+        </p>
+
+
+        <!-- ================= LOGIN TYPE ================= -->
+
+        <div class="login-type">
+
+            <button
+                type="button"
+                id="userLoginBtn"
+                class="active"
+                onclick="selectLoginType('user')">
+
+                User
+
+            </button>
+
+
+            <button
+                type="button"
+                id="providerLoginBtn"
+                onclick="selectLoginType('provider')">
+
+                Provider
+
+            </button>
+
+
+            <button
+                type="button"
+                id="adminLoginBtn"
+                onclick="selectLoginType('admin')">
+
+                Admin
+
+            </button>
+
+        </div>
+
+
+        <!-- ================= ERROR ================= -->
+
+        <div
+            id="errorMessage"
+            class="error-message">
+        </div>
+
+
+        <!-- ================= SUCCESS ================= -->
+
+        <div
+            id="successMessage"
+            class="success-message">
+        </div>
+
+
+        <!-- ================= LOGIN FORM ================= -->
+
+        <form
+            id="loginForm"
+            onsubmit="loginUser(event)">
+
+
+            <!-- EMAIL -->
+
+            <div class="form-group">
+
+                <label for="email">
+                    Email Address
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="Enter your email"
+                    required>
+
+            </div>
+
+
+            <!-- PASSWORD -->
+
+            <div class="form-group">
+
+                <label for="password">
+                    Password
+                </label>
+
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Enter your password"
+                    required>
+
+            </div>
+
+
+            <!-- LOGIN BUTTON -->
+
+            <button
+                type="submit"
+                class="login-submit">
+
+                Login
+
+            </button>
+
+        </form>
+
+
+        <!-- ================= USER SIGNUP ================= -->
+
+        <div
+            class="signup-info"
+            id="userSignup">
+
+            Don't have an account?
+
+            <a
+                href="signup.html"
+                class="signup-link">
+
+                Create Account
+
+            </a>
+
+        </div>
+
+
+        <!-- ================= PROVIDER SIGNUP ================= -->
+
+        <div
+            class="provider-info"
+            id="providerSignup">
+
+            Want to provide services?
+
+            <a
+                href="provider-signup.html"
+                class="provider-link">
+
+                Register as Provider
+
+            </a>
+
+        </div>
+
+
+        <!-- ================= HOME ================= -->
+
+        <a
+            href="index.html"
+            class="home-link">
+
+            ← Back to Home
+
+        </a>
+
+    </div>
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+
+    <script>
+
+        // ==================================================
+        // API
+        // ==================================================
+
+        const API_BASE =
+            "http://127.0.0.1:5000/api";
+
+
+        // ==================================================
+        // CURRENT LOGIN TYPE
+        // ==================================================
+
+        let loginType = "user";
+
+
+        // ==================================================
+        // SELECT LOGIN TYPE
+        // ==================================================
+
+        function selectLoginType(type) {
+
+            loginType = type;
+
+
+            const userButton =
+                document.getElementById("userLoginBtn");
+
+            const providerButton =
+                document.getElementById("providerLoginBtn");
+
+            const adminButton =
+                document.getElementById("adminLoginBtn");
+
+
+            const title =
+                document.getElementById("loginTitle");
+
+            const subtitle =
+                document.getElementById("loginSubtitle");
+
+
+            const userSignup =
+                document.getElementById("userSignup");
+
+            const providerSignup =
+                document.getElementById("providerSignup");
+
+
+            // Remove active
+
+            userButton.classList.remove("active");
+
+            providerButton.classList.remove("active");
+
+            adminButton.classList.remove("active");
+
+
+            // Hide signup links
+
+            userSignup.style.display = "none";
+
+            providerSignup.style.display = "none";
+
+
+            // ================= USER =================
+
+            if (type === "user") {
+
+                userButton.classList.add("active");
+
+                title.innerText =
+                    "Welcome Back";
+
+                subtitle.innerText =
+                    "Login as a User to continue booking local services.";
+
+                userSignup.style.display =
+                    "block";
+
+                providerSignup.style.display =
+                    "block";
+
+            }
+
+
+            // ================= PROVIDER =================
+
+            else if (type === "provider") {
+
+                providerButton.classList.add("active");
+
+                title.innerText =
+                    "Provider Login";
+
+                subtitle.innerText =
+                    "Login to manage your services and bookings.";
+
+                providerSignup.style.display =
+                    "block";
+
+            }
+
+
+            // ================= ADMIN =================
+
+            else if (type === "admin") {
+
+                adminButton.classList.add("active");
+
+                title.innerText =
+                    "Admin Login";
+
+                subtitle.innerText =
+                    "Login to manage users, providers and bookings.";
+
+            }
+
+
+            clearMessages();
+
+        }
+
+
+        // ==================================================
+        // LOGIN
+        // ==================================================
+
+        async function loginUser(event) {
+
+            event.preventDefault();
+
+
+            const email =
+                document
+                    .getElementById("email")
+                    .value
+                    .trim()
+                    .toLowerCase();
+
+
+            const password =
+                document
+                    .getElementById("password")
+                    .value;
+
+
+            const errorMessage =
+                document.getElementById("errorMessage");
+
+
+            const successMessage =
+                document.getElementById("successMessage");
+
+
+            const submitButton =
+                document.querySelector(".login-submit");
+
+
+            clearMessages();
+
+
+            // ==================================================
+            // VALIDATION
+            // ==================================================
+
+            if (!email) {
+
+                showError(
+                    "Please enter your email address."
+                );
+
+                return;
+            }
+
+
+            if (!password) {
+
+                showError(
+                    "Please enter your password."
+                );
+
+                return;
+            }
+
+
+            // ==================================================
+            // BUTTON
+            // ==================================================
+
+            submitButton.disabled = true;
+
+            submitButton.innerText =
+                "Logging in...";
+
+
+            try {
+
+                let endpoint = "";
+
+                let body = {
+                    email: email,
+                    password: password
+                };
+
+
+                // ==================================================
+                // USER LOGIN
+                // ==================================================
+
+                if (loginType === "user") {
+
+                    endpoint =
+                        `${API_BASE}/auth/login`;
+
+                }
+
+
+                // ==================================================
+                // PROVIDER LOGIN
+                // ==================================================
+
+                else if (loginType === "provider") {
+
+                    endpoint =
+                        `${API_BASE}/providers/login`;
+
+                }
+
+
+                // ==================================================
+                // ADMIN LOGIN
+                // ==================================================
+
+                else if (loginType === "admin") {
+
+                    endpoint =
+                        `${API_BASE}/admin/login`;
+
+                }
+
+
+                // ==================================================
+                // API REQUEST
+                // ==================================================
+
+                const response =
+                    await fetch(
+                        endpoint,
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body:
+                                JSON.stringify(body)
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                // ==================================================
+                // LOGIN FAILED
+                // ==================================================
+
+                if (
+                    !response.ok ||
+                    !data.success
+                ) {
+
+                    showError(
+                        data.message ||
+                        "Invalid email or password."
+                    );
+
+
+                    submitButton.disabled =
+                        false;
+
+                    submitButton.innerText =
+                        "Login";
+
+                    return;
+                }
+
+
+                // ==================================================
+                // USER SESSION
+                // ==================================================
+
+                if (loginType === "user") {
+
+                    if (!data.user) {
+
+                        throw new Error(
+                            "User data was not returned by server."
+                        );
+
+                    }
+
+
+                    const user = {
+
+                        id:
+                            data.user.id,
+
+                        name:
+                            data.user.name,
+
+                        email:
+                            data.user.email,
+
+                        phone:
+                            data.user.phone || "",
+
+                        address:
+                            data.user.address || "",
+
+                        city:
+                            data.user.city || ""
+
+                    };
+
+
+                    localStorage.setItem(
+                        "localServiceUser",
+                        JSON.stringify(user)
+                    );
+
+
+                    localStorage.setItem(
+                        "localServiceLoggedIn",
+                        "true"
+                    );
+
+
+                    // Clear other role sessions
+
+                    localStorage.removeItem(
+                        "localServiceProvider"
+                    );
+
+                    localStorage.removeItem(
+                        "localServiceAdmin"
+                    );
+
+                    localStorage.removeItem(
+                        "loggedInProviderId"
+                    );
+
+                    localStorage.removeItem(
+                        "selectedProviderId"
+                    );
+
+                    localStorage.removeItem(
+                        "localServiceAdminLoggedIn"
+                    );
+
+                }
+
+
+                // ==================================================
+                // PROVIDER SESSION
+                // ==================================================
+
+                else if (loginType === "provider") {
+
+                    if (!data.provider) {
+
+                        throw new Error(
+                            "Provider data was not returned by server."
+                        );
+
+                    }
+
+
+                    const provider =
+                        data.provider;
+
+
+                    localStorage.setItem(
+                        "localServiceProvider",
+                        JSON.stringify(provider)
+                    );
+
+
+                    localStorage.setItem(
+                        "loggedInProviderId",
+                        String(provider.id)
+                    );
+
+
+                    // Clear user/admin sessions
+
+                    localStorage.removeItem(
+                        "localServiceUser"
+                    );
+
+                    localStorage.removeItem(
+                        "localServiceLoggedIn"
+                    );
+
+                    localStorage.removeItem(
+                        "localServiceAdmin"
+                    );
+
+                    localStorage.removeItem(
+                        "localServiceAdminLoggedIn"
+                    );
+
+                    localStorage.removeItem(
+                        "selectedProviderId"
+                    );
+
+                }
+
+
+                // ==================================================
+                // ADMIN SESSION
+                // ==================================================
+
+                else if (loginType === "admin") {
+
+                    if (!data.admin) {
+
+                        throw new Error(
+                            "Admin data was not returned by server."
+                        );
+
+                    }
+
+
+                    const admin =
+                        data.admin;
+
+
+                    localStorage.setItem(
+                        "localServiceAdmin",
+                        JSON.stringify(admin)
+                    );
+
+
+                    localStorage.setItem(
+                        "localServiceAdminLoggedIn",
+                        "true"
+                    );
+
+
+                    // Clear user/provider sessions
+
+                    localStorage.removeItem(
+                        "localServiceUser"
+                    );
+
+                    localStorage.removeItem(
+                        "localServiceLoggedIn"
+                    );
+
+                    localStorage.removeItem(
+                        "localServiceProvider"
+                    );
+
+                    localStorage.removeItem(
+                        "loggedInProviderId"
+                    );
+
+                    localStorage.removeItem(
+                        "selectedProviderId"
+                    );
+
+                }
+
+
+                // ==================================================
+                // SUCCESS
+                // ==================================================
+
+                successMessage.innerText =
+                    "Login successful! Redirecting...";
+
+                successMessage.style.display =
+                    "block";
+
+
+                // ==================================================
+                // REDIRECT
+                // ==================================================
+
+                setTimeout(function () {
+
+                    if (loginType === "user") {
+
+                        window.location.href =
+                            "index.html";
+
+                    }
+
+                    else if (loginType === "provider") {
+
+                        window.location.href =
+                            "provider-dashboard.html";
+
+                    }
+
+                    else if (loginType === "admin") {
+
+                        window.location.href =
+                            "admin-dashboard.html";
+
+                    }
+
+                }, 700);
+
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    "Login Error:",
+                    error
+                );
+
+
+                showError(
+                    error.message ||
+                    "Unable to connect to server. Please make sure the backend is running."
+                );
+
+
+                submitButton.disabled =
+                    false;
+
+                submitButton.innerText =
+                    "Login";
+
+            }
+
+        }
+
+
+        // ==================================================
+        // SHOW ERROR
+        // ==================================================
+
+        function showError(message) {
+
+            const errorMessage =
+                document.getElementById("errorMessage");
+
+
+            errorMessage.innerText =
+                message;
+
+
+            errorMessage.style.display =
+                "block";
+
+        }
+
+
+        // ==================================================
+        // CLEAR MESSAGES
+        // ==================================================
+
+        function clearMessages() {
+
+            const errorMessage =
+                document.getElementById("errorMessage");
+
+
+            const successMessage =
+                document.getElementById("successMessage");
+
+
+            errorMessage.innerText =
+                "";
+
+            successMessage.innerText =
+                "";
+
+
+            errorMessage.style.display =
+                "none";
+
+            successMessage.style.display =
+                "none";
+
+        }
+
+
+        // ==================================================
+        // INITIAL STATE
+        // ==================================================
+
+        selectLoginType("user");
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Provider Signup - Local Service</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            min-height: 100vh;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    rgba(3, 20, 30, 0.82),
+                    rgba(3, 20, 30, 0.48)
+                ),
+                url("image/background.png");
+
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 30px 15px;
+        }
+
+        /* ================= CONTAINER ================= */
+
+        .signup-container {
+            width: 100%;
+            max-width: 620px;
+
+            background: rgba(255, 255, 255, 0.97);
+
+            border-radius: 18px;
+
+            padding: 38px;
+
+            box-shadow:
+                0 25px 60px rgba(0, 0, 0, 0.30);
+        }
+
+        /* ================= LOGO ================= */
+
+        .logo {
+            text-align: center;
+
+            margin-bottom: 8px;
+
+            font-size: 29px;
+            font-weight: 800;
+
+            color: #172033;
+        }
+
+        .logo span {
+            color: #147df5;
+        }
+
+        /* ================= HEADING ================= */
+
+        .signup-container h1 {
+            text-align: center;
+
+            margin-bottom: 8px;
+
+            font-size: 28px;
+
+            color: #172033;
+        }
+
+        .subtitle {
+            text-align: center;
+
+            margin-bottom: 28px;
+
+            color: #64748b;
+
+            font-size: 14px;
+
+            line-height: 1.5;
+        }
+
+        /* ================= FORM GRID ================= */
+
+        .form-grid {
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 17px;
+        }
+
+        .form-group {
+            margin-bottom: 0;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+
+            margin-bottom: 7px;
+
+            color: #334155;
+
+            font-size: 14px;
+
+            font-weight: 700;
+        }
+
+        .required {
+            color: #dc2626;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+
+            padding: 13px 14px;
+
+            border: 1px solid #d8e0ea;
+
+            border-radius: 9px;
+
+            outline: none;
+
+            background: #ffffff;
+
+            color: #172033;
+
+            font-size: 15px;
+
+            transition: 0.2s;
+        }
+
+        .form-group textarea {
+            min-height: 90px;
+
+            resize: vertical;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #147df5;
+
+            box-shadow:
+                0 0 0 3px rgba(20, 125, 245, 0.10);
+        }
+
+        /* ================= PASSWORD ================= */
+
+        .password-box {
+            position: relative;
+        }
+
+        .password-box input {
+            padding-right: 65px;
+        }
+
+        .show-password {
+            position: absolute;
+
+            right: 12px;
+
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            border: none;
+
+            background: none;
+
+            color: #147df5;
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+        }
+
+        /* ================= INFO ================= */
+
+        .approval-info {
+            margin-top: 22px;
+
+            padding: 13px 15px;
+
+            border-radius: 9px;
+
+            background: #eff6ff;
+
+            border: 1px solid #bfdbfe;
+
+            color: #1e40af;
+
+            font-size: 13px;
+
+            line-height: 1.5;
+        }
+
+        /* ================= BUTTON ================= */
+
+        .signup-submit {
+            width: 100%;
+
+            margin-top: 22px;
+
+            padding: 14px;
+
+            border: none;
+
+            border-radius: 9px;
+
+            background: #147df5;
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition: 0.3s;
+        }
+
+        .signup-submit:hover {
+            background: #0867d2;
+
+            transform: translateY(-1px);
+        }
+
+        .signup-submit:disabled {
+            opacity: 0.7;
+
+            cursor: not-allowed;
+
+            transform: none;
+        }
+
+        /* ================= ERROR ================= */
+
+        .error-message {
+            display: none;
+
+            margin-bottom: 15px;
+
+            padding: 11px 13px;
+
+            border-radius: 8px;
+
+            background: #fff1f2;
+
+            border: 1px solid #fecdd3;
+
+            color: #be123c;
+
+            font-size: 13px;
+
+            line-height: 1.4;
+        }
+
+        /* ================= SUCCESS ================= */
+
+        .success-message {
+            display: none;
+
+            margin-bottom: 15px;
+
+            padding: 11px 13px;
+
+            border-radius: 8px;
+
+            background: #f0fdf4;
+
+            border: 1px solid #bbf7d0;
+
+            color: #15803d;
+
+            font-size: 13px;
+
+            line-height: 1.4;
+        }
+
+        /* ================= LOGIN ================= */
+
+        .login-info {
+            text-align: center;
+
+            margin-top: 22px;
+
+            color: #64748b;
+
+            font-size: 14px;
+        }
+
+        .login-link {
+            color: #147df5;
+
+            text-decoration: none;
+
+            font-weight: 700;
+        }
+
+        .login-link:hover {
+            text-decoration: underline;
+        }
+
+        /* ================= HOME ================= */
+
+        .home-link {
+            display: block;
+
+            margin-top: 14px;
+
+            text-align: center;
+
+            color: #147df5;
+
+            text-decoration: none;
+
+            font-size: 14px;
+
+            font-weight: 700;
+        }
+
+        .home-link:hover {
+            text-decoration: underline;
+        }
+
+        /* ================= MOBILE ================= */
+
+        @media (max-width: 650px) {
+
+            body {
+                padding: 18px;
+            }
+
+            .signup-container {
+                padding: 28px 22px;
+            }
+
+            .signup-container h1 {
+                font-size: 25px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full-width {
+                grid-column: auto;
+            }
+
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- ================= SIGNUP CARD ================= -->
+
+    <div class="signup-container">
+
+        <!-- LOGO -->
+
+        <div class="logo">
+            Local<span>Service</span>
+        </div>
+
+        <!-- HEADING -->
+
+        <h1>
+            Become a Service Provider
+        </h1>
+
+        <p class="subtitle">
+            Register your service and connect with customers in your area.
+        </p>
+
+
+        <!-- ERROR -->
+
+        <div
+            id="errorMessage"
+            class="error-message">
+        </div>
+
+
+        <!-- SUCCESS -->
+
+        <div
+            id="successMessage"
+            class="success-message">
+        </div>
+
+
+        <!-- ================= FORM ================= -->
+
+        <form
+            id="providerSignupForm"
+            onsubmit="registerProvider(event)">
+
+            <div class="form-grid">
+
+                <!-- FULL NAME -->
+
+                <div class="form-group">
+
+                    <label for="name">
+                        Full Name
+                        <span class="required">*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        id="name"
+                        placeholder="Enter your full name"
+                        required>
+
+                </div>
+
+
+                <!-- EMAIL -->
+
+                <div class="form-group">
+
+                    <label for="email">
+                        Email Address
+                        <span class="required">*</span>
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="Enter your email"
+                        required>
+
+                </div>
+
+
+                <!-- MOBILE -->
+
+                <div class="form-group">
+
+                    <label for="phone">
+                        Mobile Number
+                        <span class="required">*</span>
+                    </label>
+
+                    <input
+                        type="tel"
+                        id="phone"
+                        placeholder="10-digit mobile number"
+                        maxlength="10"
+                        inputmode="numeric"
+                        required>
+
+                </div>
+
+
+                <!-- SERVICE -->
+
+                <div class="form-group">
+
+                    <label for="service">
+                        Service Type
+                        <span class="required">*</span>
+                    </label>
+
+                    <select
+                        id="service"
+                        required>
+
+                        <option value="">
+                            Select Service
+                        </option>
+
+                        <option value="Carpenter">
+                            Carpenter
+                        </option>
+
+                        <option value="Plumber">
+                            Plumber
+                        </option>
+
+                        <option value="Cleaner">
+                            Cleaner
+                        </option>
+
+                        <option value="Home Designer">
+                            Home Designer
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- EXPERIENCE -->
+
+                <div class="form-group">
+
+                    <label for="experience">
+                        Experience
+                        <span class="required">*</span>
+                    </label>
+
+                    <input
+                        type="number"
+                        id="experience"
+                        placeholder="Years of experience"
+                        min="0"
+                        max="60"
+                        required>
+
+                </div>
+
+
+                <!-- PRICE -->
+
+                <div class="form-group">
+
+                    <label for="price">
+                        Starting Price
+                    </label>
+
+                    <input
+                        type="number"
+                        id="price"
+                        placeholder="Example: 500"
+                        min="0">
+
+                </div>
+
+
+                <!-- CITY -->
+
+                <div class="form-group">
+
+                    <label for="city">
+                        City
+                        <span class="required">*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        id="city"
+                        placeholder="Enter your city"
+                        required>
+
+                </div>
+
+
+                <!-- ADDRESS -->
+
+                <div class="form-group">
+
+                    <label for="address">
+                        Address
+                        <span class="required">*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        id="address"
+                        placeholder="Enter your address"
+                        required>
+
+                </div>
+
+
+                <!-- PASSWORD -->
+
+                <div class="form-group">
+
+                    <label for="password">
+                        Password
+                        <span class="required">*</span>
+                    </label>
+
+                    <div class="password-box">
+
+                        <input
+                            type="password"
+                            id="password"
+                            placeholder="Minimum 6 characters"
+                            minlength="6"
+                            required>
+
+                        <button
+                            type="button"
+                            class="show-password"
+                            id="showPassword">
+                            Show
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- CONFIRM PASSWORD -->
+
+                <div class="form-group">
+
+                    <label for="confirmPassword">
+                        Confirm Password
+                        <span class="required">*</span>
+                    </label>
+
+                    <div class="password-box">
+
+                        <input
+                            type="password"
+                            id="confirmPassword"
+                            placeholder="Re-enter password"
+                            minlength="6"
+                            required>
+
+                        <button
+                            type="button"
+                            class="show-password"
+                            id="showConfirmPassword">
+                            Show
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- APPROVAL INFORMATION -->
+
+            <div class="approval-info">
+
+                <strong>Provider Approval:</strong>
+
+                Your provider account will remain pending until an
+                administrator reviews and approves your application.
+
+            </div>
+
+
+            <!-- SUBMIT -->
+
+            <button
+                type="submit"
+                class="signup-submit"
+                id="signupButton">
+
+                Register as Provider
+
+            </button>
+
+        </form>
+
+
+        <!-- LOGIN -->
+
+        <div class="login-info">
+
+            Already have an account?
+
+            <a
+                href="login.html"
+                class="login-link">
+
+                Login
+
+            </a>
+
+        </div>
+
+
+        <!-- HOME -->
+
+        <a
+            href="index(2).html"
+            class="home-link">
+
+            ← Back to Home
+
+        </a>
+
+    </div>
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+
+    <script>
+
+        const API_BASE_URL =
+            "http://127.0.0.1:5000";
+
+
+        /*
+            SHOW / HIDE PASSWORD
+        */
+
+        document
+            .getElementById("showPassword")
+            .addEventListener("click", function () {
+
+                const password =
+                    document.getElementById("password");
+
+                if (password.type === "password") {
+
+                    password.type = "text";
+
+                    this.innerText = "Hide";
+
+                } else {
+
+                    password.type = "password";
+
+                    this.innerText = "Show";
+
+                }
+
+            });
+
+
+        /*
+            SHOW / HIDE CONFIRM PASSWORD
+        */
+
+        document
+            .getElementById("showConfirmPassword")
+            .addEventListener("click", function () {
+
+                const password =
+                    document.getElementById("confirmPassword");
+
+                if (password.type === "password") {
+
+                    password.type = "text";
+
+                    this.innerText = "Hide";
+
+                } else {
+
+                    password.type = "password";
+
+                    this.innerText = "Show";
+
+                }
+
+            });
+
+
+        /*
+            REGISTER PROVIDER
+        */
+
+        async function registerProvider(event) {
+
+            event.preventDefault();
+
+
+            const name =
+                document.getElementById("name")
+                    .value
+                    .trim();
+
+            const email =
+                document.getElementById("email")
+                    .value
+                    .trim()
+                    .toLowerCase();
+
+            const phone =
+                document.getElementById("phone")
+                    .value
+                    .trim();
+
+            const service =
+                document.getElementById("service")
+                    .value;
+
+            const experience =
+                document.getElementById("experience")
+                    .value;
+
+            const price =
+                document.getElementById("price")
+                    .value;
+
+            const city =
+                document.getElementById("city")
+                    .value
+                    .trim();
+
+            const address =
+                document.getElementById("address")
+                    .value
+                    .trim();
+
+            const password =
+                document.getElementById("password")
+                    .value;
+
+            const confirmPassword =
+                document.getElementById("confirmPassword")
+                    .value;
+
+
+            const signupButton =
+                document.getElementById("signupButton");
+
+
+            /*
+                CLEAR MESSAGES
+            */
+
+            hideMessages();
+
+
+            /*
+                VALIDATION
+            */
+
+            if (!name) {
+
+                showError(
+                    "Please enter your full name."
+                );
+
+                return;
+
+            }
+
+
+            if (!email) {
+
+                showError(
+                    "Please enter your email address."
+                );
+
+                return;
+
+            }
+
+
+            if (!/^\d{10}$/.test(phone)) {
+
+                showError(
+                    "Please enter a valid 10-digit mobile number."
+                );
+
+                return;
+
+            }
+
+
+            if (!service) {
+
+                showError(
+                    "Please select your service type."
+                );
+
+                return;
+
+            }
+
+
+            if (experience === "" || Number(experience) < 0) {
+
+                showError(
+                    "Please enter valid experience."
+                );
+
+                return;
+
+            }
+
+
+            if (!city) {
+
+                showError(
+                    "Please enter your city."
+                );
+
+                return;
+
+            }
+
+
+            if (!address) {
+
+                showError(
+                    "Please enter your address."
+                );
+
+                return;
+
+            }
+
+
+            if (password.length < 6) {
+
+                showError(
+                    "Password must contain at least 6 characters."
+                );
+
+                return;
+
+            }
+
+
+            if (password !== confirmPassword) {
+
+                showError(
+                    "Password and confirm password do not match."
+                );
+
+                return;
+
+            }
+
+
+            /*
+                DISABLE BUTTON
+            */
+
+            signupButton.disabled = true;
+
+            signupButton.innerText =
+                "Submitting Application...";
+
+
+            try {
+
+                /*
+                    PROVIDER SIGNUP API
+
+                    Backend endpoint:
+
+                    POST
+                    /api/providers/signup
+                */
+
+                const response = await fetch(
+
+                    `${API_BASE_URL}/api/providers/signup`,
+
+                    {
+
+                        method: "POST",
+
+                        headers: {
+
+                            "Content-Type":
+                                "application/json"
+
+                        },
+
+                        body: JSON.stringify({
+
+                            name: name,
+
+                            email: email,
+
+                            phone: phone,
+
+                            password: password,
+
+                            service_type: service,
+
+                            experience:
+                                Number(experience),
+
+                            price:
+                                price === ""
+                                    ? 0
+                                    : Number(price),
+
+                            address: address,
+
+                            city: city
+
+                        })
+
+                    }
+
+                );
+
+
+                let data;
+
+
+                try {
+
+                    data =
+                        await response.json();
+
+                } catch (jsonError) {
+
+                    throw new Error(
+                        "Invalid response received from server."
+                    );
+
+                }
+
+
+                /*
+                    BACKEND ERROR
+                */
+
+                if (
+                    !response.ok ||
+                    !data.success
+                ) {
+
+                    showError(
+
+                        data.message ||
+                        "Unable to register provider."
+
+                    );
+
+
+                    signupButton.disabled =
+                        false;
+
+                    signupButton.innerText =
+                        "Register as Provider";
+
+                    return;
+
+                }
+
+
+                /*
+                    SUCCESS
+                */
+
+                showSuccess(
+
+                    data.message ||
+                    "Provider registration submitted successfully. Please wait for admin approval."
+
+                );
+
+
+                /*
+                    RESET FORM
+                */
+
+                document
+                    .getElementById(
+                        "providerSignupForm"
+                    )
+                    .reset();
+
+
+                signupButton.disabled =
+                    false;
+
+                signupButton.innerText =
+                    "Register as Provider";
+
+
+            } catch (error) {
+
+                console.error(
+                    "Provider Signup Error:",
+                    error
+                );
+
+
+                showError(
+
+                    "Unable to connect to server. Please make sure the backend is running."
+
+                );
+
+
+                signupButton.disabled =
+                    false;
+
+                signupButton.innerText =
+                    "Register as Provider";
+
+            }
+
+        }
+
+
+        /*
+            SHOW ERROR
+        */
+
+        function showError(message) {
+
+            const errorMessage =
+                document.getElementById(
+                    "errorMessage"
+                );
+
+            const successMessage =
+                document.getElementById(
+                    "successMessage"
+                );
+
+
+            successMessage.style.display =
+                "none";
+
+
+            errorMessage.innerText =
+                message;
+
+            errorMessage.style.display =
+                "block";
+
+        }
+
+
+        /*
+            SHOW SUCCESS
+        */
+
+        function showSuccess(message) {
+
+            const errorMessage =
+                document.getElementById(
+                    "errorMessage"
+                );
+
+            const successMessage =
+                document.getElementById(
+                    "successMessage"
+                );
+
+
+            errorMessage.style.display =
+                "none";
+
+
+            successMessage.innerText =
+                message;
+
+            successMessage.style.display =
+                "block";
+
+        }
+
+
+        /*
+            HIDE MESSAGES
+        */
+
+        function hideMessages() {
+
+            document.getElementById(
+                "errorMessage"
+            ).style.display = "none";
+
+
+            document.getElementById(
+                "successMessage"
+            ).style.display = "none";
+
+        }
+
+    </script>
+
+</body>
+
+</html>

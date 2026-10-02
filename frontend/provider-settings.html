@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Provider Settings | LocalService</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#f4f7fb;
+    color:#172033;
+}
+
+/* NAVBAR */
+.navbar{
+    height:70px;
+    background:#101827;
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 7%;
+}
+
+.logo{
+    font-size:23px;
+    font-weight:bold;
+}
+
+.logo span{
+    color:#4f9cff;
+}
+
+.nav-links{
+    display:flex;
+    align-items:center;
+    gap:22px;
+}
+
+.nav-links a{
+    color:#cbd5e1;
+    text-decoration:none;
+    font-size:14px;
+}
+
+.nav-links a:hover{
+    color:white;
+}
+
+.dashboard-btn{
+    background:#2563eb;
+    color:white !important;
+    padding:10px 16px;
+    border-radius:9px;
+}
+
+/* MAIN */
+.container{
+    width:92%;
+    max-width:1050px;
+    margin:35px auto;
+}
+
+.back-btn{
+    border:none;
+    background:white;
+    color:#2563eb;
+    padding:10px 16px;
+    border-radius:9px;
+    cursor:pointer;
+    font-weight:bold;
+    margin-bottom:20px;
+}
+
+/* HEADER */
+.page-header{
+    background:linear-gradient(135deg,#172554,#2563eb);
+    color:white;
+    border-radius:22px;
+    padding:30px;
+    margin-bottom:22px;
+}
+
+.page-header h1{
+    font-size:28px;
+    margin-bottom:8px;
+}
+
+.page-header p{
+    color:#dbeafe;
+    font-size:14px;
+}
+
+/* PROFILE PHOTO */
+.photo-card{
+    background:white;
+    border-radius:20px;
+    padding:28px;
+    display:flex;
+    align-items:center;
+    gap:25px;
+    box-shadow:0 5px 20px rgba(0,0,0,.05);
+    margin-bottom:22px;
+}
+
+.profile-photo{
+    width:120px;
+    height:120px;
+    border-radius:50%;
+    object-fit:cover;
+    border:5px solid #e5edff;
+}
+
+.photo-info h2{
+    margin-bottom:8px;
+}
+
+.photo-info p{
+    color:#7b8493;
+    font-size:13px;
+    line-height:1.5;
+}
+
+.upload-btn{
+    display:inline-block;
+    margin-top:13px;
+    background:#2563eb;
+    color:white;
+    padding:10px 16px;
+    border-radius:9px;
+    cursor:pointer;
+    font-size:13px;
+    font-weight:bold;
+}
+
+input[type="file"]{
+    display:none;
+}
+
+/* FORM CARD */
+.card{
+    background:white;
+    border-radius:20px;
+    padding:28px;
+    box-shadow:0 5px 20px rgba(0,0,0,.05);
+    margin-bottom:22px;
+}
+
+.card h2{
+    font-size:19px;
+    margin-bottom:22px;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+}
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+}
+
+.form-group.full{
+    grid-column:1 / -1;
+}
+
+.form-group label{
+    font-size:12px;
+    font-weight:bold;
+    color:#475569;
+    margin-bottom:7px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea{
+    width:100%;
+    border:1px solid #dce2ea;
+    padding:12px;
+    border-radius:9px;
+    outline:none;
+    font-size:14px;
+    background:white;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus{
+    border-color:#2563eb;
+}
+
+.form-group textarea{
+    height:110px;
+    resize:vertical;
+}
+
+/* READ ONLY */
+.readonly{
+    background:#f1f5f9 !important;
+    color:#64748b;
+}
+
+/* BUTTONS */
+.action-area{
+    display:flex;
+    justify-content:flex-end;
+    gap:12px;
+    margin-top:25px;
+}
+
+.cancel-btn,
+.save-btn{
+    border:none;
+    padding:12px 22px;
+    border-radius:9px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.cancel-btn{
+    background:#e2e8f0;
+    color:#334155;
+}
+
+.save-btn{
+    background:#2563eb;
+    color:white;
+}
+
+/* STATUS */
+.status-box{
+    background:#f0fdf4;
+    border:1px solid #bbf7d0;
+    color:#166534;
+    padding:13px 15px;
+    border-radius:10px;
+    margin-bottom:20px;
+    font-size:13px;
+    display:none;
+}
+
+/* RESPONSIVE */
+@media(max-width:700px){
+
+    .navbar{
+        padding:0 20px;
+    }
+
+    .nav-links a:not(.dashboard-btn){
+        display:none;
+    }
+
+    .container{
+        width:94%;
+    }
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .form-group.full{
+        grid-column:auto;
+    }
+
+    .photo-card{
+        flex-direction:column;
+        text-align:center;
+    }
+
+    .action-area{
+        flex-direction:column;
+    }
+
+    .cancel-btn,
+    .save-btn{
+        width:100%;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+
+<nav class="navbar">
+
+    <div class="logo">
+        Local<span>Service</span>
+    </div>
+
+    <div class="nav-links">
+
+        <a href="provider-dashboard.html">
+            Dashboard
+        </a>
+
+        <a href="provider-profile.html">
+            Public Profile
+        </a>
+
+        <a href="provider-dashboard.html">
+            Wallet
+        </a>
+
+        <a
+            href="provider-dashboard.html"
+            class="dashboard-btn"
+        >
+            Workspace
+        </a>
+
+    </div>
+
+</nav>
+
+
+<!-- ================= MAIN ================= -->
+
+<div class="container">
+
+    <button
+        class="back-btn"
+        onclick="goDashboard()"
+    >
+        ← Back to Dashboard
+    </button>
+
+
+    <!-- HEADER -->
+
+    <div class="page-header">
+
+        <h1>
+            ⚙️ Profile Settings
+        </h1>
+
+        <p>
+            Manage your provider information,
+            profile photo and service details.
+        </p>
+
+    </div>
+
+
+    <!-- SUCCESS -->
+
+    <div
+        class="status-box"
+        id="successMessage"
+    >
+        ✓ Profile updated successfully!
+    </div>
+
+
+    <!-- ================= PHOTO ================= -->
+
+    <div class="photo-card">
+
+        <img
+            id="profilePhoto"
+            class="profile-photo"
+            src=""
+            alt="Provider Photo"
+        >
+
+        <div class="photo-info">
+
+            <h2>
+                Profile Photo
+            </h2>
+
+            <p>
+                Upload a clear profile photo.
+                This photo can be displayed to
+                customers on your provider profile.
+            </p>
+
+            <label
+                for="photoInput"
+                class="upload-btn"
+            >
+                📷 Change Photo
+            </label>
+
+            <input
+                type="file"
+                id="photoInput"
+                accept="image/*"
+                onchange="uploadPhoto(event)"
+            >
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= BASIC INFORMATION ================= -->
+
+    <div class="card">
+
+        <h2>
+            👤 Basic Information
+        </h2>
+
+        <div class="form-grid">
+
+            <div class="form-group">
+
+                <label>
+                    Full Name
+                </label>
+
+                <input
+                    type="text"
+                    id="name"
+                    placeholder="Enter your full name"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Mobile Number
+                </label>
+
+                <input
+                    type="tel"
+                    id="mobile"
+                    maxlength="10"
+                    placeholder="10 digit mobile number"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Email Address
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="Enter email"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Provider ID
+                </label>
+
+                <input
+                    type="text"
+                    id="providerId"
+                    class="readonly"
+                    readonly
+                >
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= SERVICE INFORMATION ================= -->
+
+    <div class="card">
+
+        <h2>
+            🔧 Service Information
+        </h2>
+
+        <div class="form-grid">
+
+            <div class="form-group">
+
+                <label>
+                    Service
+                </label>
+
+                <select id="service">
+
+                    <option value="Carpenter">
+                        Carpenter
+                    </option>
+
+                    <option value="Plumber">
+                        Plumber
+                    </option>
+
+                    <option value="Cleaner">
+                        Cleaner
+                    </option>
+
+                    <option value="Home Designer">
+                        Home Designer
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Experience
+                </label>
+
+                <input
+                    type="text"
+                    id="experience"
+                    placeholder="Example: 5 Years"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Service Rate ₹
+                </label>
+
+                <input
+                    type="number"
+                    id="price"
+                    min="0"
+                    placeholder="Enter service rate"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Location
+                </label>
+
+                <input
+                    type="text"
+                    id="location"
+                    placeholder="Example: Pune"
+                >
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= ABOUT ================= -->
+
+    <div class="card">
+
+        <h2>
+            📝 About Your Service
+        </h2>
+
+        <div class="form-group">
+
+            <label>
+                About Me
+            </label>
+
+            <textarea
+                id="about"
+                placeholder="Write something about your experience and services..."
+            ></textarea>
+
+        </div>
+
+
+        <div class="action-area">
+
+            <button
+                class="cancel-btn"
+                onclick="goDashboard()"
+            >
+                Cancel
+            </button>
+
+            <button
+                class="save-btn"
+                onclick="saveProfile()"
+            >
+                💾 Save Changes
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+const API_BASE = "http://127.0.0.1:5000/api";
+
+
+/* =====================================================
+   JSON HELPER
+===================================================== */
+
+function getJSON(key) {
+
+    try {
+
+        return JSON.parse(
+            localStorage.getItem(key) || "null"
+        );
+
+    } catch (error) {
+
+        return null;
+
+    }
+
+}
+
+
+/* =====================================================
+   GET PROVIDER ID
+===================================================== */
+
+function getProviderId() {
+
+    const storedProvider =
+        getJSON("localServiceProvider") || {};
+
+    return (
+        localStorage.getItem("loggedInProviderId") ||
+        storedProvider.id ||
+        localStorage.getItem("selectedProviderId") ||
+        ""
+    );
+
+}
+
+
+/* =====================================================
+   SET INPUT VALUE
+===================================================== */
+
+function setValue(id, value) {
+
+    const element =
+        document.getElementById(id);
+
+    if (element) {
+
+        element.value =
+            value ?? "";
+
+    }
+
+}
+
+
+/* =====================================================
+   GET INPUT VALUE
+===================================================== */
+
+function getValue(id) {
+
+    const element =
+        document.getElementById(id);
+
+    if (!element) {
+
+        return "";
+
+    }
+
+    return element.value.trim();
+
+}
+
+
+/* =====================================================
+   LOAD PROVIDER PROFILE
+===================================================== */
+
+async function loadProfile() {
+
+    const providerId =
+        getProviderId();
+
+    if (!providerId) {
+
+        alert(
+            "Provider login required."
+        );
+
+        window.location.href =
+            "login.html";
+
+        return;
+
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${API_BASE}/providers/${encodeURIComponent(providerId)}`
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            !data.success ||
+            !data.provider
+        ) {
+
+            throw new Error(
+                data.message ||
+                "Unable to load profile."
+            );
+
+        }
+
+
+        const provider =
+            data.provider;
+
+
+        /* ================= BASIC INFORMATION ================= */
+
+        setValue(
+            "name",
+            provider.name
+        );
+
+
+        setValue(
+            "mobile",
+            provider.phone
+        );
+
+
+        setValue(
+            "email",
+            provider.email
+        );
+
+
+        setValue(
+            "providerId",
+            provider.id
+        );
+
+
+        /* ================= SERVICE INFORMATION ================= */
+
+        setValue(
+            "service",
+            provider.service_type
+        );
+
+
+        setValue(
+            "experience",
+            provider.experience
+        );
+
+
+        /* ================= LOCATION ================= */
+
+        /*
+           Your HTML has only one location field.
+           Backend has both address and city.
+
+           So we display city first.
+           If city is empty, address is used.
+        */
+
+        setValue(
+            "location",
+            provider.city ||
+            provider.address ||
+            ""
+        );
+
+
+        /* ================= PHOTO ================= */
+
+        const profilePhoto =
+            document.getElementById(
+                "profilePhoto"
+            );
+
+        if (profilePhoto) {
+
+            /*
+               Your current backend does not
+               return a profile photo URL.
+
+               Keep the existing image element
+               without breaking anything.
+            */
+
+            profilePhoto.style.display =
+                "none";
+
+        }
+
+
+        console.log(
+            "Provider profile loaded:",
+            provider
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Load profile error:",
+            error
+        );
+
+
+        alert(
+            error.message ||
+            "Unable to load profile."
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   SAVE PROFILE
+===================================================== */
+
+async function saveProfile(event) {
+
+    if (event) {
+
+        event.preventDefault();
+
+    }
+
+
+    const providerId =
+        getProviderId();
+
+
+    if (!providerId) {
+
+        alert(
+            "Provider login required."
+        );
+
+        return;
+
+    }
+
+
+    /* ================= GET FORM VALUES ================= */
+
+    const name =
+        getValue("name");
+
+
+    const phone =
+        getValue("mobile");
+
+
+    const serviceType =
+        getValue("service");
+
+
+    const experienceText =
+        getValue("experience");
+
+
+    const location =
+        getValue("location");
+
+
+    /* ================= VALIDATION ================= */
+
+    if (!name) {
+
+        alert(
+            "Please enter your full name."
+        );
+
+        document.getElementById(
+            "name"
+        ).focus();
+
+        return;
+
+    }
+
+
+    if (!phone) {
+
+        alert(
+            "Please enter your mobile number."
+        );
+
+        document.getElementById(
+            "mobile"
+        ).focus();
+
+        return;
+
+    }
+
+
+    if (!/^\d{10}$/.test(phone)) {
+
+        alert(
+            "Mobile number must contain exactly 10 digits."
+        );
+
+        document.getElementById(
+            "mobile"
+        ).focus();
+
+        return;
+
+    }
+
+
+    if (!serviceType) {
+
+        alert(
+            "Please select your service."
+        );
+
+        return;
+
+    }
+
+
+    let experience =
+        Number(
+            experienceText || 0
+        );
+
+
+    if (
+        !Number.isInteger(experience) ||
+        experience < 0
+    ) {
+
+        alert(
+            "Experience must be a valid number."
+        );
+
+        document.getElementById(
+            "experience"
+        ).focus();
+
+        return;
+
+    }
+
+
+    /* =================================================
+       GET OLD PROVIDER DATA
+
+       We keep the existing address because
+       the current HTML only has one Location field.
+    ================================================= */
+
+    const oldProvider =
+        getJSON(
+            "localServiceProvider"
+        ) || {};
+
+
+    /*
+       Location field represents city in the
+       current UI.
+    */
+
+    const city =
+        location;
+
+
+    const address =
+        oldProvider.address ||
+        "";
+
+
+    /* =================================================
+       SEND UPDATE TO BACKEND
+    ================================================= */
+
+    try {
+
+        const response =
+            await fetch(
+                `${API_BASE}/providers/${encodeURIComponent(providerId)}`,
+                {
+                    method: "PUT",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+
+                        name:
+                            name,
+
+                        phone:
+                            phone,
+
+                        service_type:
+                            serviceType,
+
+                        experience:
+                            experience,
+
+                        address:
+                            address,
+
+                        city:
+                            city
+
+                    })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+
+            throw new Error(
+                data.message ||
+                "Unable to update profile."
+            );
+
+        }
+
+
+        /* =================================================
+           UPDATE LOCAL STORAGE
+        ================================================= */
+
+        const updatedProvider = {
+
+            ...oldProvider,
+
+            ...data.provider
+
+        };
+
+
+        localStorage.setItem(
+            "localServiceProvider",
+            JSON.stringify(
+                updatedProvider
+            )
+        );
+
+
+        localStorage.setItem(
+            "loggedInProviderId",
+            String(
+                data.provider.id
+            )
+        );
+
+
+        /* =================================================
+           SUCCESS MESSAGE
+        ================================================= */
+
+        const successMessage =
+            document.getElementById(
+                "successMessage"
+            );
+
+
+        if (successMessage) {
+
+            successMessage.style.display =
+                "block";
+
+
+            successMessage.textContent =
+                "✓ Profile updated successfully!";
+
+        }
+
+
+        alert(
+            "Profile updated successfully."
+        );
+
+
+        /* =================================================
+           RELOAD UPDATED DATA
+        ================================================= */
+
+        await loadProfile();
+
+
+    } catch (error) {
+
+        console.error(
+            "Save profile error:",
+            error
+        );
+
+
+        alert(
+            error.message ||
+            "Unable to update profile."
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   PHOTO
+===================================================== */
+
+function uploadPhoto(event) {
+
+    const file =
+        event.target.files[0];
+
+
+    if (!file) {
+
+        return;
+
+    }
+
+
+    /*
+       Backend currently has no profile-photo
+       upload API.
+
+       For now show the selected image
+       locally in the browser.
+    */
+
+    const reader =
+        new FileReader();
+
+
+    reader.onload =
+        function(e) {
+
+            const profilePhoto =
+                document.getElementById(
+                    "profilePhoto"
+                );
+
+
+            if (profilePhoto) {
+
+                profilePhoto.src =
+                    e.target.result;
+
+                profilePhoto.style.display =
+                    "block";
+
+            }
+
+        };
+
+
+    reader.readAsDataURL(file);
+
+}
+
+
+/* =====================================================
+   GO DASHBOARD
+===================================================== */
+
+function goDashboard() {
+
+    window.location.href =
+        "provider-dashboard.html";
+
+}
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+function logoutProvider() {
+
+    localStorage.removeItem(
+        "loggedInProviderId"
+    );
+
+
+    localStorage.removeItem(
+        "selectedProviderId"
+    );
+
+
+    localStorage.removeItem(
+        "localServiceProvider"
+    );
+
+
+    localStorage.removeItem(
+        "localServiceLoggedIn"
+    );
+
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+/* =====================================================
+   PAGE LOAD
+===================================================== */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        loadProfile();
+
+    }
+);
+
+</script>
+
+</body>
+</html>

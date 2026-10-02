@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Find Service Providers - Local Service</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f9ff;
+            color: #172033;
+        }
+
+        /* ================= NAVBAR ================= */
+
+        .navbar {
+            height: 78px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 6%;
+            background: #0b1f33;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            color: white;
+            text-decoration: none;
+            font-size: 27px;
+            font-weight: 800;
+        }
+
+        .logo span {
+            color: #42a5ff;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #42a5ff;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .signup-btn,
+        .logout-btn {
+            border: none;
+            padding: 10px 19px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .signup-btn {
+            background: #147df5;
+            color: white;
+        }
+
+        .logout-btn {
+            display: none;
+            background: white;
+            color: #147df5;
+        }
+
+        /* ================= PAGE HEADER ================= */
+
+        .page-header {
+            padding: 55px 6% 45px;
+            background:
+                linear-gradient(
+                    90deg,
+                    #0b1f33,
+                    #123b61
+                );
+            color: white;
+        }
+
+        .page-header h1 {
+            font-size: 40px;
+            margin-bottom: 12px;
+        }
+
+        .page-header h1 span {
+            color: #42a5ff;
+        }
+
+        .page-header p {
+            color: #dbeafe;
+            font-size: 16px;
+        }
+
+        /* ================= SEARCH SUMMARY ================= */
+
+        .search-summary {
+            max-width: 1200px;
+            margin: -25px auto 0;
+            padding: 18px 22px;
+            background: white;
+            border-radius: 12px;
+            box-shadow:
+                0 10px 30px rgba(0, 0, 0, 0.10);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .search-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #475569;
+            font-size: 15px;
+        }
+
+        .search-info strong {
+            color: #172033;
+        }
+
+        .change-search {
+            border: none;
+            background: #eaf4ff;
+            color: #147df5;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        /* ================= MAIN ================= */
+
+        .main-container {
+            max-width: 1200px;
+            margin: 45px auto;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .section-title h2 {
+            font-size: 27px;
+        }
+
+        .provider-count {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        /* ================= PROVIDER GRID ================= */
+
+        .providers-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        /* ================= CARD ================= */
+
+        .provider-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid #e5eaf0;
+            box-shadow:
+                0 8px 25px rgba(0, 0, 0, 0.07);
+            transition: 0.3s;
+        }
+
+        .provider-card:hover {
+            transform: translateY(-5px);
+            box-shadow:
+                0 15px 35px rgba(0, 0, 0, 0.12);
+        }
+
+        /* ================= PROFILE IMAGE ================= */
+
+        .provider-image {
+            height: 210px;
+            background:
+                linear-gradient(
+                    135deg,
+                    #dbeafe,
+                    #eff6ff
+                );
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 75px;
+        }
+
+        /* ================= CARD CONTENT ================= */
+
+        .provider-content {
+            padding: 20px;
+        }
+
+        .provider-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .provider-name {
+            font-size: 20px;
+            font-weight: 800;
+            color: #172033;
+        }
+
+        .verified {
+            padding: 5px 8px;
+            border-radius: 20px;
+            background: #eaf8ef;
+            color: #15803d;
+            font-size: 11px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .provider-service {
+            margin-top: 7px;
+            color: #147df5;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        /* ================= RATING ================= */
+
+        .rating-row {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            margin-top: 14px;
+        }
+
+        .stars {
+            color: #f59e0b;
+            letter-spacing: 2px;
+        }
+
+        .rating-number {
+            color: #172033;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .reviews {
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        /* ================= DETAILS ================= */
+
+        .provider-details {
+            margin-top: 17px;
+            padding-top: 15px;
+            border-top: 1px solid #edf0f4;
+        }
+
+        .detail {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin-bottom: 10px;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .detail strong {
+            color: #172033;
+        }
+
+        /* ================= PRICE ================= */
+
+        .price {
+            margin-top: 15px;
+            font-size: 19px;
+            font-weight: 800;
+            color: #172033;
+        }
+
+        .price span {
+            color: #64748b;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        /* ================= BUTTONS ================= */
+
+       /* ================= PROVIDER BUTTONS ================= */
+
+.card-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1.15fr;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.profile-btn,
+.book-btn {
+    min-height: 44px;
+    padding: 11px 14px;
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+/* VIEW PROFILE */
+
+.profile-btn {
+    background: #f1f7ff;
+    color: #147df5;
+    border: 1px solid #cfe4ff;
+}
+
+.profile-btn:hover {
+    background: #e1efff;
+    border-color: #a9d0ff;
+    transform: translateY(-1px);
+    box-shadow: 0 5px 14px rgba(20, 125, 245, 0.12);
+}
+
+/* BOOK NOW */
+
+.book-btn {
+    background: #147df5;
+    color: #ffffff;
+    border: 1px solid #147df5;
+    box-shadow: 0 5px 14px rgba(20, 125, 245, 0.18);
+}
+
+.book-btn:hover {
+    background: #0867d2;
+    border-color: #0867d2;
+    transform: translateY(-1px);
+    box-shadow: 0 7px 17px rgba(20, 125, 245, 0.25);
+}
+
+.profile-btn:active,
+.book-btn:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+/* MOBILE */
+
+@media (max-width: 420px) {
+
+    .card-buttons {
+        grid-template-columns: 1fr;
+        gap: 9px;
+    }
+
+    .profile-btn,
+    .book-btn {
+        width: 100%;
+        min-height: 43px;
+    }
+}
+
+        /* ================= EMPTY ================= */
+
+        .empty-message {
+            display: none;
+            padding: 50px 20px;
+            text-align: center;
+            background: white;
+            border-radius: 14px;
+        }
+
+        .empty-message h2 {
+            margin-bottom: 10px;
+            color: #172033;
+        }
+
+        .empty-message p {
+            color: #64748b;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 1000px) {
+
+            .providers-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+
+        @media (max-width: 650px) {
+
+            .navbar {
+                padding: 0 5%;
+            }
+
+            .page-header {
+                padding: 40px 5%;
+            }
+
+            .page-header h1 {
+                font-size: 31px;
+            }
+
+            .search-summary {
+                margin: -15px 15px 0;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .providers-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .main-container {
+                margin-top: 35px;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- ================= NAVBAR ================= -->
+
+    <nav class="navbar">
+
+        <a href="index.html" class="logo">
+            Local<span>Service</span>
+        </a>
+
+        <ul class="nav-links">
+
+            <li>
+                <a href="index.html">Home</a>
+            </li>
+
+            <li>
+                <a href="providers.html">Services</a>
+            </li>
+
+            <li>
+                <a href="#how">How It Works</a>
+            </li>
+
+            <li>
+                <a href="#about">About</a>
+            </li>
+
+            <li>
+                <a href="#contact">Contact</a>
+            </li>
+
+        </ul>
+
+
+        <div class="nav-right">
+
+            <button
+                id="signupBtn"
+                class="signup-btn"
+                onclick="goSignup()">
+                Sign Up
+            </button>
+
+            <button
+                id="logoutBtn"
+                class="logout-btn"
+                onclick="logoutUser()">
+                Logout
+            </button>
+
+        </div>
+
+    </nav>
+
+
+
+    <!-- ================= PAGE HEADER ================= -->
+
+    <section class="page-header">
+
+        <h1>
+            Find Your
+            <span>Service Provider</span>
+        </h1>
+
+        <p>
+            Choose a trusted professional for your service needs.
+        </p>
+
+    </section>
+
+
+
+    <!-- ================= SEARCH SUMMARY ================= -->
+
+    <div class="search-summary">
+
+        <div class="search-info">
+
+            <span>📍</span>
+
+            <strong id="selectedLocation">
+                Location
+            </strong>
+
+            <span>|</span>
+
+            <span>🔧</span>
+
+            <strong id="selectedService">
+                Service
+            </strong>
+
+        </div>
+
+
+        <button
+            class="change-search"
+            onclick="goHome()">
+
+            Change Search
+
+        </button>
+
+    </div>
+
+
+
+    <!-- ================= MAIN ================= -->
+
+    <main class="main-container">
+
+
+        <div class="section-title">
+
+            <h2>
+                Available Providers
+            </h2>
+
+            <span
+                class="provider-count"
+                id="providerCount">
+                0 Providers Found
+            </span>
+
+        </div>
+
+
+        <!-- ================= PROVIDERS ================= -->
+
+        <div
+            class="providers-grid"
+            id="providersGrid">
+        </div>
+
+
+        <!-- ================= NO PROVIDER MESSAGE ================= -->
+
+        <div
+            class="empty-message"
+            id="noProviderMessage">
+
+            <h2>
+                No providers found
+            </h2>
+
+            <p>
+                No provider is currently available
+                for your selected service and location.
+            </p>
+
+        </div>
+
+
+    </main>
+
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+
+    <script>
+const API_BASE = "http://127.0.0.1:5000/api";
+
+const SERVICE_DATA = {
+    "Carpenter": {
+        id: 1,
+        name: "Carpenter",
+        price: 500
+    },
+    "Plumber": {
+        id: 2,
+        name: "Plumber",
+        price: 400
+    },
+    "Cleaner": {
+        id: 3,
+        name: "Cleaner",
+        price: 300
+    },
+    "Home Designer": {
+        id: 4,
+        name: "Home Designer",
+        price: 1000
+    }
+};
+
+function getJSON(key) {
+    try {
+        return JSON.parse(localStorage.getItem(key) || "null");
+    } catch (error) {
+        return null;
+    }
+}
+
+function escapeHTML(value) {
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+function getSelectedService() {
+    const saved = getJSON("selectedService");
+
+    if (!saved) {
+        return null;
+    }
+
+    if (typeof saved === "string") {
+        return SERVICE_DATA[saved] || null;
+    }
+
+    const name = saved.name;
+
+    if (!name || !SERVICE_DATA[name]) {
+        return null;
+    }
+
+    return {
+        id: Number(saved.id) || SERVICE_DATA[name].id,
+        name: name,
+        price: Number(saved.price) || SERVICE_DATA[name].price
+    };
+}
+
+async function loadProviders() {
+    const service = getSelectedService();
+    const location =
+        localStorage.getItem("searchLocation") || "";
+
+    if (!service) {
+        alert("Please select a service first.");
+        window.location.href = "index.html";
+        return;
+    }
+
+    const heading = document.getElementById("selectedServiceName");
+    const locationText = document.getElementById("selectedLocation");
+
+    if (heading) {
+        heading.textContent = service.name;
+    }
+
+    if (locationText) {
+        locationText.textContent =
+            location || "All locations";
+    }
+
+    const container =
+        document.getElementById("providersContainer") ||
+        document.getElementById("providersGrid");
+
+    if (!container) {
+        console.error("Provider container not found.");
+        return;
+    }
+
+    container.innerHTML = `
+        <div style="
+            width:100%;
+            padding:40px;
+            text-align:center;
+        ">
+            Loading providers...
+        </div>
+    `;
+
+    try {
+        const params = new URLSearchParams();
+
+        params.set("service_type", service.name);
+
+        if (location) {
+            params.set("city", location);
+        }
+
+        const response =
+            await fetch(`${API_BASE}/providers?${params.toString()}`);
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+            throw new Error(
+                data.message ||
+                data.error ||
+                "Unable to load providers."
+            );
+        }
+
+        const providers = data.providers || [];
+
+        localStorage.setItem(
+            "searchedProviders",
+            JSON.stringify(providers)
+        );
+
+        if (!providers.length) {
+            container.innerHTML = `
+                <div style="
+                    width:100%;
+                    padding:50px 20px;
+                    text-align:center;
+                ">
+                    <h3>No approved providers found</h3>
+                    <p>
+                        Try another location or service.
+                    </p>
+                </div>
+            `;
+
+            return;
+        }
+
+        container.innerHTML = "";
+
+        for (const provider of providers) {
+            container.insertAdjacentHTML(
+                "beforeend",
+                createProviderCard(provider)
+            );
+        }
+
+    } catch (error) {
+        console.error(error);
+
+        container.innerHTML = `
+            <div style="
+                width:100%;
+                padding:40px;
+                text-align:center;
+            ">
+                <h3>Unable to load providers</h3>
+                <p>${escapeHTML(error.message)}</p>
+                <button onclick="loadProviders()">
+                    Try Again
+                </button>
+            </div>
+        `;
+    }
+}
+
+function createProviderCard(provider) {
+    const id = Number(provider.id);
+
+    const service =
+        provider.service_type || "Service";
+
+    const experience =
+        Number(provider.experience || 0);
+
+    const city =
+        provider.city ||
+        provider.address ||
+        "Location not available";
+
+    return `
+        <div class="provider-card">
+
+            <div class="provider-image">
+                👨‍🔧
+            </div>
+
+            <div class="provider-info">
+
+                <h3>
+                    ${escapeHTML(provider.name)}
+                </h3>
+
+                <p>
+                    ${escapeHTML(service)}
+                </p>
+
+                <p>
+                    📍 ${escapeHTML(city)}
+                </p>
+
+                <p>
+                    Experience:
+                    ${experience} years
+                </p>
+
+                <p>
+                    ⭐ Provider
+                </p>
+
+                <div class="card-buttons">
+
+                    <button
+                        type="button"
+                        class="profile-btn"
+                        onclick="viewProfile(${id})">
+
+                        👤 View Profile
+
+                    </button>
+
+                    <button
+                        type="button"
+                        class="book-btn"
+                        onclick="bookProvider(${id})">
+
+                        📅 Book Now
+
+                    </button>
+
+                </div>
+            </div>
+
+        </div>
+    `;
+}
+
+function getLoggedInUser() {
+    return getJSON("localServiceUser");
+}
+
+function bookProvider(providerId) {
+    const user = getLoggedInUser();
+
+    if (!user || !user.id) {
+        alert("Please login first.");
+        window.location.href = "login.html";
+        return;
+    }
+
+    localStorage.setItem(
+        "selectedProviderId",
+        String(providerId)
+    );
+
+    window.location.href = "booking.html";
+}
+
+function viewProfile(providerId) {
+    localStorage.setItem(
+        "selectedProviderId",
+        String(providerId)
+    );
+
+    window.location.href =
+        "provider-profile.html";
+}
+
+function logoutUser() {
+    localStorage.removeItem("localServiceUser");
+    localStorage.removeItem("localServiceLoggedIn");
+
+    window.location.href = "login.html";
+}
+
+document.addEventListener(
+    "DOMContentLoaded",
+    loadProviders
+);
+</script>
+
+</body>
+
+</html>

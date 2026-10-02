@@ -1,0 +1,1818 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Book Service - LocalService</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f9ff;
+            color: #172033;
+        }
+
+        /* ================= NAVBAR ================= */
+
+        .navbar {
+            height: 78px;
+            background: #0b1f33;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 6%;
+        }
+
+        .logo {
+            color: white;
+            text-decoration: none;
+
+            font-size: 27px;
+            font-weight: 800;
+        }
+
+        .logo span {
+            color: #42a5ff;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .nav-links a:hover {
+            color: #42a5ff;
+        }
+
+        .logout-btn {
+            display: none;
+
+            padding: 10px 18px;
+
+            border: none;
+            border-radius: 8px;
+
+            background: white;
+            color: #147df5;
+
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        /* ================= CONTAINER ================= */
+
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+
+            padding: 0 20px;
+        }
+
+        .back-btn {
+            border: none;
+            background: transparent;
+
+            color: #147df5;
+
+            font-size: 15px;
+            font-weight: 700;
+
+            cursor: pointer;
+
+            margin-bottom: 20px;
+        }
+
+        /* ================= TITLE ================= */
+
+        .page-title {
+            margin-bottom: 25px;
+        }
+
+        .page-title h1 {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .page-title p {
+            color: #64748b;
+        }
+
+        /* ================= LAYOUT ================= */
+
+        .booking-layout {
+            display: grid;
+
+            grid-template-columns: 1fr 360px;
+
+            gap: 25px;
+        }
+
+        /* ================= FORM ================= */
+
+        .booking-form {
+            background: white;
+
+            padding: 30px;
+
+            border-radius: 16px;
+
+            box-shadow:
+                0 10px 30px rgba(0, 0, 0, 0.07);
+        }
+
+        .booking-form h2 {
+            margin-bottom: 25px;
+            font-size: 22px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+
+            margin-bottom: 8px;
+
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+
+            width: 100%;
+
+            padding: 13px 14px;
+
+            border: 1px solid #d8e1ec;
+
+            border-radius: 8px;
+
+            outline: none;
+
+            font-size: 14px;
+
+            background: white;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+
+            border-color: #147df5;
+
+            box-shadow:
+                0 0 0 3px rgba(20, 125, 245, 0.08);
+        }
+
+        .form-group textarea {
+            height: 110px;
+            resize: vertical;
+        }
+
+        .row {
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 15px;
+        }
+
+        .confirm-btn {
+            width: 100%;
+
+            padding: 15px;
+
+            border: none;
+
+            border-radius: 9px;
+
+            background: #147df5;
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: 800;
+
+            cursor: pointer;
+
+            margin-top: 5px;
+        }
+
+        .confirm-btn:hover {
+            background: #0867d2;
+        }
+
+        /* ================= SUMMARY ================= */
+
+        .summary-card {
+            background: white;
+
+            padding: 25px;
+
+            border-radius: 16px;
+
+            box-shadow:
+                0 10px 30px rgba(0, 0, 0, 0.07);
+
+            height: fit-content;
+        }
+
+        .summary-card h2 {
+            font-size: 21px;
+
+            margin-bottom: 20px;
+        }
+
+        .provider-mini {
+            display: flex;
+
+            align-items: center;
+
+            gap: 15px;
+
+            padding-bottom: 20px;
+
+            border-bottom: 1px solid #edf0f4;
+        }
+
+        .provider-photo {
+            width: 70px;
+            height: 70px;
+
+            border-radius: 12px;
+
+            background: #eaf3ff;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            font-size: 35px;
+        }
+
+        .provider-mini h3 {
+            margin-bottom: 5px;
+        }
+
+        .provider-mini p {
+            color: #147df5;
+
+            font-size: 14px;
+
+            font-weight: 700;
+        }
+
+        .summary-details {
+            margin-top: 20px;
+        }
+
+        .summary-row {
+            display: flex;
+
+            justify-content: space-between;
+
+            gap: 10px;
+
+            margin-bottom: 14px;
+
+            font-size: 14px;
+        }
+
+        .summary-row .label {
+            color: #64748b;
+        }
+
+        .summary-row .value {
+            font-weight: 700;
+
+            text-align: right;
+        }
+
+        .total {
+            display: flex;
+
+            justify-content: space-between;
+
+            border-top: 1px solid #edf0f4;
+
+            padding-top: 18px;
+
+            margin-top: 8px;
+        }
+
+        .total span:first-child {
+            font-weight: 700;
+        }
+
+        .total span:last-child {
+            font-size: 23px;
+
+            font-weight: 800;
+
+            color: #147df5;
+        }
+
+        /* ================= SUCCESS ================= */
+
+        .success-message {
+            display: none;
+
+            position: fixed;
+
+            top: 0;
+            left: 0;
+
+            width: 100%;
+            height: 100%;
+
+            background: rgba(11, 31, 51, 0.55);
+
+            align-items: center;
+            justify-content: center;
+
+            padding: 20px;
+
+            z-index: 200;
+        }
+
+        .success-box {
+            width: 100%;
+            max-width: 450px;
+
+            background: white;
+
+            padding: 35px;
+
+            border-radius: 18px;
+
+            text-align: center;
+        }
+
+        .success-icon {
+            width: 70px;
+            height: 70px;
+
+            margin: 0 auto 18px;
+
+            border-radius: 50%;
+
+            background: #eaf8ef;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            font-size: 35px;
+        }
+
+        .success-box h2 {
+            margin-bottom: 10px;
+        }
+
+        .success-box p {
+            color: #64748b;
+
+            line-height: 1.6;
+
+            margin-bottom: 22px;
+        }
+
+        .dashboard-btn {
+            width: 100%;
+
+            padding: 13px;
+
+            border: none;
+
+            border-radius: 8px;
+
+            background: #147df5;
+
+            color: white;
+
+            font-weight: 700;
+
+            cursor: pointer;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 850px) {
+
+            .nav-links {
+                display: none;
+            }
+
+            .booking-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .summary-card {
+                order: -1;
+            }
+        }
+
+        @media (max-width: 550px) {
+
+            .row {
+                grid-template-columns: 1fr;
+            }
+
+            .booking-form {
+                padding: 20px;
+            }
+
+            .page-title h1 {
+                font-size: 27px;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- ================= NAVBAR ================= -->
+
+    <nav class="navbar">
+
+        <a href="index.html"
+           class="logo">
+
+            Local<span>Service</span>
+
+        </a>
+
+
+        <ul class="nav-links">
+
+            <li>
+                <a href="index.html">
+                    Home
+                </a>
+            </li>
+
+            <li>
+                <a href="providers.html">
+                    Services
+                </a>
+            </li>
+
+            <li>
+                <a href="#">
+                    How It Works
+                </a>
+            </li>
+
+            <li>
+                <a href="#">
+                    About
+                </a>
+            </li>
+
+            <li>
+                <a href="#">
+                    Contact
+                </a>
+            </li>
+
+        </ul>
+
+
+        <button
+            id="logoutBtn"
+            class="logout-btn"
+            onclick="logoutUser()">
+
+            Logout
+
+        </button>
+
+    </nav>
+
+
+
+    <!-- ================= MAIN ================= -->
+
+    <main class="container">
+
+
+        <button
+            class="back-btn"
+            onclick="goBack()">
+
+            ← Back to Provider
+
+        </button>
+
+
+        <div class="page-title">
+
+            <h1>
+                Book Your Service
+            </h1>
+
+            <p>
+                Fill in the details below to book your service.
+            </p>
+
+        </div>
+
+
+
+        <div class="booking-layout">
+
+
+            <!-- ================= FORM ================= -->
+
+            <div class="booking-form">
+
+
+                <h2>
+                    Booking Details
+                </h2>
+
+
+                <form
+                    id="bookingForm"
+                    onsubmit="confirmBooking(event)">
+
+
+                    <!-- DATE + TIME -->
+
+                    <div class="row">
+
+
+                        <div class="form-group">
+
+                            <label for="bookingDate">
+                                Service Date
+                            </label>
+
+                            <input
+                                type="date"
+                                id="bookingDate"
+                                required>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="bookingTime">
+                                Service Time
+                            </label>
+
+                            <input
+                                type="time"
+                                id="bookingTime"
+                                required>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- ADDRESS -->
+
+                    <div class="form-group">
+
+                        <label for="address">
+                            Service Address
+                        </label>
+
+                        <textarea
+                            id="address"
+                            placeholder="Enter your complete address"
+                            required></textarea>
+
+                    </div>
+
+
+
+                    <!-- CITY -->
+
+                    <div class="row">
+
+
+                        <div class="form-group">
+
+                            <label for="city">
+                                City
+                            </label>
+
+                            <input
+                                type="text"
+                                id="city"
+                                placeholder="Enter city"
+                                required>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="pincode">
+                                Pincode
+                            </label>
+
+                            <input
+                                type="text"
+                                id="pincode"
+                                placeholder="Enter pincode"
+                                maxlength="6"
+                                required>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- PHONE -->
+
+                    <div class="form-group">
+
+                        <label for="phone">
+                            Contact Number
+                        </label>
+
+                        <input
+                            type="tel"
+                            id="phone"
+                            placeholder="Enter 10 digit mobile number"
+                            maxlength="10"
+                            required>
+
+                    </div>
+
+
+
+                    <!-- NOTES -->
+
+                    <div class="form-group">
+
+                        <label for="notes">
+                            Additional Notes
+                        </label>
+
+                        <textarea
+                            id="notes"
+                            placeholder="Tell the provider anything important about the service..."></textarea>
+
+                    </div>
+
+
+
+                    <button
+                        type="submit"
+                        class="confirm-btn">
+
+                        Confirm Booking
+
+                    </button>
+
+
+                </form>
+
+            </div>
+
+
+
+            <!-- ================= SUMMARY ================= -->
+
+            <div class="summary-card">
+
+
+                <h2>
+                    Booking Summary
+                </h2>
+
+
+                <div class="provider-mini">
+
+
+                    <div
+                        class="provider-photo"
+                        id="providerImage">
+
+                        👨‍🔧
+
+                    </div>
+
+
+                    <div>
+
+                        <h3
+                            id="providerName">
+
+                            Rajesh Kumar
+
+                        </h3>
+
+                        <p
+                            id="providerService">
+
+                            Carpenter
+
+                        </p>
+
+                    </div>
+
+
+                </div>
+
+
+
+                <div class="summary-details">
+
+
+                    <div class="summary-row">
+
+                        <span class="label">
+                            Location
+                        </span>
+
+                        <span
+                            class="value"
+                            id="providerLocation">
+
+                            Pune
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="summary-row">
+
+                        <span class="label">
+                            Experience
+                        </span>
+
+                        <span
+                            class="value"
+                            id="providerExperience">
+
+                            7 Years
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="summary-row">
+
+                        <span class="label">
+                            Rating
+                        </span>
+
+                        <span
+                            class="value"
+                            id="providerRating">
+
+                            ★ 4.8
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="summary-row">
+
+                        <span class="label">
+                            Service Rate
+                        </span>
+
+                        <span
+                            class="value">
+
+                            ₹<span id="providerPrice">
+                                500
+                            </span>
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="total">
+
+                        <span>
+                            Total Amount
+                        </span>
+
+                        <span>
+                            ₹<span id="totalPrice">
+                                500
+                            </span>
+                        </span>
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+    </main>
+
+
+
+    <!-- ================= SUCCESS POPUP ================= -->
+
+    <div
+        class="success-message"
+        id="successMessage">
+
+
+        <div class="success-box">
+
+
+            <div class="success-icon">
+
+                ✓
+
+            </div>
+
+
+            <h2>
+                Booking Confirmed!
+            </h2>
+
+
+            <p>
+
+                Your service booking has been successfully
+                submitted. You can check your booking status
+                from your dashboard.
+
+            </p>
+
+
+            <button
+                class="dashboard-btn"
+                onclick="goDashboard()">
+
+                Go to My Dashboard
+
+            </button>
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+<script>
+const API_BASE = "http://127.0.0.1:5000/api";
+
+/* =========================
+   SERVICE DATA
+========================= */
+
+const SERVICE_MAP = {
+    "Carpenter": {
+        id: 1,
+        price: 500
+    },
+    "Plumber": {
+        id: 2,
+        price: 400
+    },
+    "Cleaner": {
+        id: 3,
+        price: 300
+    },
+    "Home Designer": {
+        id: 4,
+        price: 1000
+    }
+};
+
+
+/* =========================
+   LOCAL STORAGE JSON
+========================= */
+
+function getJSON(key) {
+    try {
+        return JSON.parse(
+            localStorage.getItem(key) || "null"
+        );
+    } catch (error) {
+        console.error("JSON error:", error);
+        return null;
+    }
+}
+
+
+/* =========================
+   NORMALIZE SERVICE
+========================= */
+
+function getValidService() {
+
+    let service = getJSON("selectedService");
+
+    if (!service) {
+        return null;
+    }
+
+    /*
+       Case 1:
+       selectedService is just a string
+    */
+
+    if (typeof service === "string") {
+
+        const serviceName = service.trim();
+
+        const info = SERVICE_MAP[serviceName];
+
+        if (!info) {
+            return null;
+        }
+
+        const correctedService = {
+            id: info.id,
+            name: serviceName,
+            price: info.price
+        };
+
+        localStorage.setItem(
+            "selectedService",
+            JSON.stringify(correctedService)
+        );
+
+        return correctedService;
+    }
+
+
+    /*
+       Case 2:
+       selectedService is an object
+       but id/price are null or 0
+    */
+
+    if (typeof service === "object") {
+
+        const serviceName =
+            String(
+                service.name ||
+                service.service_name ||
+                ""
+            ).trim();
+
+
+        if (!serviceName) {
+            return null;
+        }
+
+
+        const info =
+            SERVICE_MAP[serviceName];
+
+
+        if (!info) {
+            return null;
+        }
+
+
+        /*
+           Fix null / 0 ID and price
+        */
+
+        const serviceId =
+            Number(service.id);
+
+
+        const servicePrice =
+            Number(service.price);
+
+
+        const correctedService = {
+
+            id:
+                serviceId > 0
+                    ? serviceId
+                    : info.id,
+
+            name:
+                serviceName,
+
+            price:
+                servicePrice > 0
+                    ? servicePrice
+                    : info.price
+        };
+
+
+        localStorage.setItem(
+            "selectedService",
+            JSON.stringify(correctedService)
+        );
+
+
+        console.log(
+            "Corrected selected service:",
+            correctedService
+        );
+
+
+        return correctedService;
+    }
+
+
+    return null;
+}
+
+
+/* =========================
+   LOAD PROVIDER
+========================= */
+
+async function loadProvider() {
+
+    const providerId =
+        localStorage.getItem(
+            "selectedProviderId"
+        );
+
+
+    const selectedService =
+        getValidService();
+
+
+    if (!providerId) {
+
+        alert(
+            "Provider information not found."
+        );
+
+        window.location.href =
+            "providers.html";
+
+        return;
+    }
+
+
+    if (!selectedService) {
+
+        alert(
+            "Service information not found. Please select the service again."
+        );
+
+        window.location.href =
+            "index.html";
+
+        return;
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${API_BASE}/providers/${encodeURIComponent(providerId)}`
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+
+            throw new Error(
+                data.message ||
+                "Unable to load provider."
+            );
+        }
+
+
+        const provider =
+            data.provider;
+
+
+        document.getElementById(
+            "providerName"
+        ).textContent =
+            provider.name ||
+            "Provider";
+
+
+        document.getElementById(
+            "providerService"
+        ).textContent =
+            provider.service_type ||
+            selectedService.name;
+
+
+        document.getElementById(
+            "providerLocation"
+        ).textContent =
+            provider.city ||
+            provider.address ||
+            "Location not available";
+
+
+        document.getElementById(
+            "providerExperience"
+        ).textContent =
+            `${provider.experience || 0} Years`;
+
+
+        document.getElementById(
+            "providerRating"
+        ).textContent =
+            "★ —";
+
+
+        /* =========================
+           SERVICE PRICE
+        ========================= */
+
+        const price =
+            Number(
+                selectedService.price || 0
+            );
+
+
+        document.getElementById(
+            "providerPrice"
+        ).textContent =
+            price > 0
+                ? price.toFixed(0)
+                : "On request";
+
+
+        document.getElementById(
+            "totalPrice"
+        ).textContent =
+            price > 0
+                ? price.toFixed(0)
+                : "On request";
+
+
+        /* Provider image */
+
+        document.getElementById(
+            "providerImage"
+        ).textContent =
+            "👨‍🔧";
+
+
+        /* =========================
+           USER DETAILS
+        ========================= */
+
+        const user =
+            getJSON(
+                "localServiceUser"
+            );
+
+
+        if (user) {
+
+            document.getElementById(
+                "phone"
+            ).value =
+                user.phone || "";
+
+
+            document.getElementById(
+                "city"
+            ).value =
+                user.city ||
+                provider.city ||
+                "";
+
+
+            document.getElementById(
+                "address"
+            ).value =
+                user.address ||
+                "";
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Provider load error:",
+            error
+        );
+
+
+        alert(
+            error.message ||
+            "Unable to load provider."
+        );
+
+
+        window.location.href =
+            "providers.html";
+    }
+}
+
+
+/* =========================
+   MINIMUM BOOKING DATE
+========================= */
+
+function setMinimumDate() {
+
+    const today =
+        new Date();
+
+
+    const todayString =
+        today.getFullYear() +
+        "-" +
+        String(
+            today.getMonth() + 1
+        ).padStart(2, "0") +
+        "-" +
+        String(
+            today.getDate()
+        ).padStart(2, "0");
+
+
+    const dateInput =
+        document.getElementById(
+            "bookingDate"
+        );
+
+
+    if (dateInput) {
+
+        dateInput.min =
+            todayString;
+    }
+}
+
+
+/* =========================
+   CONFIRM BOOKING
+========================= */
+
+async function confirmBooking(event) {
+
+    event.preventDefault();
+
+
+    /* =========================
+       LOGIN CHECK
+    ========================= */
+
+    const user =
+        getJSON(
+            "localServiceUser"
+        );
+
+
+    if (
+        !user ||
+        !user.id
+    ) {
+
+        alert(
+            "Please login first."
+        );
+
+
+        window.location.href =
+            "login.html";
+
+
+        return;
+    }
+
+
+    /* =========================
+       PROVIDER
+    ========================= */
+
+    const providerId =
+        localStorage.getItem(
+            "selectedProviderId"
+        );
+
+
+    if (!providerId) {
+
+        alert(
+            "Please select a provider first."
+        );
+
+
+        window.location.href =
+            "providers.html";
+
+
+        return;
+    }
+
+
+    /* =========================
+       SERVICE
+    ========================= */
+
+    const selectedService =
+        getValidService();
+
+
+    console.log(
+        "Final selected service:",
+        selectedService
+    );
+
+
+    if (
+        !selectedService ||
+        !selectedService.id
+    ) {
+
+        alert(
+            "Service information not found. Please select the service again."
+        );
+
+
+        window.location.href =
+            "index.html";
+
+
+        return;
+    }
+
+
+    /* =========================
+       FORM VALUES
+    ========================= */
+
+    const date =
+        document
+            .getElementById(
+                "bookingDate"
+            )
+            .value;
+
+
+    const time =
+        document
+            .getElementById(
+                "bookingTime"
+            )
+            .value;
+
+
+    const address =
+        document
+            .getElementById(
+                "address"
+            )
+            .value
+            .trim();
+
+
+    const city =
+        document
+            .getElementById(
+                "city"
+            )
+            .value
+            .trim();
+
+
+    const pincode =
+        document
+            .getElementById(
+                "pincode"
+            )
+            .value
+            .trim();
+
+
+    const phone =
+        document
+            .getElementById(
+                "phone"
+            )
+            .value
+            .trim();
+
+
+    const notes =
+        document
+            .getElementById(
+                "notes"
+            )
+            .value
+            .trim();
+
+
+    /* =========================
+       VALIDATION
+    ========================= */
+
+    if (
+        !date ||
+        !time ||
+        !address ||
+        !city ||
+        !pincode ||
+        !phone
+    ) {
+
+        alert(
+            "Please fill all required fields."
+        );
+
+        return;
+    }
+
+
+    if (
+        !/^[0-9]{6}$/.test(
+            pincode
+        )
+    ) {
+
+        alert(
+            "Please enter a valid 6 digit pincode."
+        );
+
+        return;
+    }
+
+
+    if (
+        !/^[0-9]{10}$/.test(
+            phone
+        )
+    ) {
+
+        alert(
+            "Please enter a valid 10 digit mobile number."
+        );
+
+        return;
+    }
+
+
+    /* =========================
+       PRICE
+    ========================= */
+
+    const price =
+        Number(
+            selectedService.price || 0
+        );
+
+
+    /* =========================
+       FULL ADDRESS
+    ========================= */
+
+    const fullAddress =
+        `${address}, ${city} - ${pincode}`;
+
+
+    /* =========================
+       BACKEND PAYLOAD
+    ========================= */
+
+    const payload = {
+
+        user_id:
+            Number(user.id),
+
+        provider_id:
+            Number(providerId),
+
+        service_id:
+            Number(selectedService.id),
+
+        booking_date:
+            date,
+
+        booking_time:
+            time,
+
+        address:
+            fullAddress,
+
+        description:
+            notes,
+
+        notes:
+            notes,
+
+        amount:
+            price,
+
+        total_amount:
+            price
+    };
+
+
+    console.log(
+        "Booking payload:",
+        payload
+    );
+
+
+    /* =========================
+       BUTTON
+    ========================= */
+
+    const button =
+        document.querySelector(
+            ".confirm-btn"
+        );
+
+
+    const originalText =
+        button
+            ? button.textContent
+            : "Confirm Booking";
+
+
+    if (button) {
+
+        button.disabled =
+            true;
+
+        button.textContent =
+            "Booking...";
+    }
+
+
+    /* =========================
+       CREATE BOOKING
+    ========================= */
+
+    try {
+
+        const response =
+            await fetch(
+                `${API_BASE}/bookings`,
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify(
+                            payload
+                        )
+                }
+            );
+
+
+        let data = null;
+
+
+        try {
+
+            data =
+                await response.json();
+
+        } catch (jsonError) {
+
+            throw new Error(
+                "Server returned an invalid response."
+            );
+        }
+
+
+        console.log(
+            "Booking HTTP status:",
+            response.status
+        );
+
+
+        console.log(
+            "Booking response:",
+            data
+        );
+
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+
+            throw new Error(
+                data.message ||
+                data.error ||
+                "Unable to create booking."
+            );
+        }
+
+
+        /* =========================
+           SAVE LAST BOOKING
+        ========================= */
+
+        if (data.booking) {
+
+            localStorage.setItem(
+                "lastBooking",
+                JSON.stringify(
+                    data.booking
+                )
+            );
+        }
+
+
+        /* =========================
+           SUCCESS POPUP
+        ========================= */
+
+        const successMessage =
+            document.getElementById(
+                "successMessage"
+            );
+
+
+        if (successMessage) {
+
+            successMessage.style.display =
+                "flex";
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Booking error:",
+            error
+        );
+
+
+        alert(
+            error.message ||
+            "Unable to create booking. Please try again."
+        );
+
+    } finally {
+
+        if (button) {
+
+            button.disabled =
+                false;
+
+            button.textContent =
+                originalText;
+        }
+    }
+}
+
+
+/* =========================
+   DASHBOARD
+========================= */
+
+function goDashboard() {
+
+    window.location.href =
+        "user-dashboard.html";
+}
+
+
+/* =========================
+   BACK
+========================= */
+
+function goBack() {
+
+    window.location.href =
+        "provider-profile.html";
+}
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+function logoutUser() {
+
+    localStorage.removeItem(
+        "localServiceUser"
+    );
+
+    localStorage.removeItem(
+        "localServiceLoggedIn"
+    );
+
+
+    window.location.href =
+        "login.html";
+}
+
+
+/* =========================
+   SESSION CHECK
+========================= */
+
+function checkSession() {
+
+    const user =
+        getJSON(
+            "localServiceUser"
+        );
+
+
+    if (
+        !user ||
+        !user.id
+    ) {
+
+        alert(
+            "Please login first."
+        );
+
+
+        window.location.href =
+            "login.html";
+
+
+        return false;
+    }
+
+
+    return true;
+}
+
+
+/* =========================
+   PAGE LOAD
+========================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        if (!checkSession()) {
+            return;
+        }
+
+
+        setMinimumDate();
+
+
+        loadProvider();
+
+    }
+);
+
+</script>
+    </body>
+
+</html>
